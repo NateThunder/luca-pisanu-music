@@ -1,65 +1,164 @@
 import Image from "next/image";
+import Link from "next/link";
+import { LessonPortrait } from "@/components/LessonPortrait";
+import { ReleaseList } from "@/components/ReleaseList";
+import { Reveal } from "@/components/Reveal";
+import { VideoPreview } from "@/components/VideoPreview";
+import { ActionLink, Arrow, Barcode, Crosshair } from "@/components/ui";
+import { heroLines, lessonFeatures, releases, roles, videos } from "@/data/site";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <section className="home-hero poster-section">
+        <div className="home-hero__copy">
+          <h1 className="home-headline">
+            {heroLines.map((line, index) => (
+              <span
+                className={`hero-stagger hero-stagger--${index + 2}`}
+                key={line}
+              >
+                {line}
+              </span>
+            ))}
+        </h1>
+          <p className="home-hero__intro hero-stagger hero-stagger--six">
+            Expressive songs, deep grooves and honest production shaped across
+            guitar, bass and everything around them.
           </p>
+          <div className="hero-actions hero-stagger hero-stagger--six">
+            <ActionLink href="/music" variant="primary">
+              Listen Now <Arrow />
+            </ActionLink>
+            <ActionLink href="/lessons">Guitar Lessons</ActionLink>
+            <ActionLink href="/contact?type=music">Book Luca</ActionLink>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+
+        <div className="home-hero__visual hero-stagger hero-stagger--three">
+          <span className="mustard-sun" aria-hidden="true" />
+          <div className="home-hero__photo">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/luca-sitting.png"
+              alt="Luca Pisanu seated with guitar"
+              fill
+              preload
+              sizes="(max-width: 820px) 100vw, 52vw"
+              className="home-hero__photo-image"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+          <span className="brush-slash" aria-hidden="true" />
         </div>
-      </main>
-    </div>
+
+        <Crosshair className="hero-crosshair" />
+        <span className="roundel" aria-hidden="true">
+          songs · stories · sound ·
+        </span>
+      </section>
+
+      <Reveal>
+        <section className="home-music poster-section">
+          <div className="section-heading">
+            <div>
+              <h2>Music</h2>
+            </div>
+            <Link className="text-link" href="/music">
+              View all music <Arrow />
+            </Link>
+          </div>
+          <ReleaseList items={releases.slice(0, 3)} compact />
+          <div className="side-ticket" aria-hidden="true">
+            <span>New drop</span>
+            <strong>Live your sound.</strong>
+            <Barcode />
+          </div>
+        </section>
+      </Reveal>
+
+        <Reveal>
+        <section className="home-video poster-section">
+          <h2>Live &amp; In The Moment</h2>
+          <VideoPreview video={videos[0]} featured />
+          <ActionLink href="/videos">
+            View all videos <Arrow />
+          </ActionLink>
+        </section>
+      </Reveal>
+
+      <div className="home-split">
+        <Reveal>
+          <section className="home-feature home-feature--about poster-section">
+            <h2>
+              More Than
+              <br />
+              <span className="circled-word">Just</span> Guitar.
+            </h2>
+            <p>
+              A songwriter, composer and producer with a multi-instrumental
+              approach to melody, rhythm and arrangement.
+            </p>
+            <div className="role-strip">
+              {roles.map((role) => (
+                <span key={role.title}>{role.title}</span>
+              ))}
+            </div>
+            <ActionLink href="/about">
+              Read the story <Arrow />
+            </ActionLink>
+            <div className="about-ticket" aria-hidden="true">
+              <span>Creative work</span>
+              <strong>Without neat edges.</strong>
+              <Barcode />
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="home-contact poster-section">
+            <h2>Let&apos;s Connect</h2>
+            <p>
+              For music, lessons, collaborations or a conversation about a new
+              idea.
+            </p>
+            <ActionLink href="/contact" variant="dark">
+              Send a message <Arrow />
+            </ActionLink>
+            <Crosshair className="home-contact__crosshair" />
+          </section>
+        </Reveal>
+      </div>
+
+      <div className="home-split home-split--final">
+        <Reveal>
+          <section className="home-feature poster-section home-feature--lessons">
+            <h2>Guitar Lessons</h2>
+            <p className="eyebrow">Learn. Play. Express.</p>
+            <p>
+              Move beyond shapes and into sound, feel and expression through
+              one-to-one sessions built around your musical voice.
+            </p>
+            <div className="mini-feature-list">
+              {lessonFeatures.map((feature, index) => (
+                <div key={feature.title}>
+                  <span>0{index + 1}</span>
+                  <div>
+                    <h3>{feature.title}</h3>
+                    <p>{feature.copy}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <ActionLink href="/lessons">
+              Explore lessons <Arrow />
+            </ActionLink>
+            <LessonPortrait
+              alt="Luca Pisanu smiling"
+              className="home-feature__photo"
+              sizes="(max-width: 820px) 52vw, (max-width: 1100px) 47vw, 34vw"
+            />
+          </section>
+        </Reveal>
+      </div>
+    </>
   );
 }
