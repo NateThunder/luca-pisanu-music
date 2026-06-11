@@ -31,11 +31,15 @@ export type Product = {
   id: string;
   name: string;
   category: string;
+  categorySlug: string;
   note: string;
-  price: string | null;
+  description: string;
+  prices: Record<CurrencyCode, number>;
+  status: string;
   artwork: "vinyl" | "book" | "shirt" | "session";
-  url: string | null;
 };
+
+export type CurrencyCode = "GBP" | "EUR" | "USD";
 
 export type InquiryType =
   | "music"
@@ -55,10 +59,13 @@ export const navigation: NavItem[] = [
 ];
 
 export const heroLines = [
+  "Luca Pisanu",
+];
+
+export const heroRoles = [
   "Singer & Songwriter",
   "Composer & Producer",
   "Multi-Instrumentalist",
-  "Independent Artist",
 ];
 
 export const releases: Release[] = [
@@ -190,37 +197,49 @@ export const products: Product[] = [
     id: "limited-vinyl",
     name: "Limited Edition Vinyl",
     category: "Music",
+    categorySlug: "music",
     note: "A numbered physical pressing with artwork insert.",
-    price: null,
+    description:
+      "A demo pressing concept for Luca's physical releases, built around numbered stock, tactile artwork and a small-run collector feel.",
+    prices: { GBP: 32, EUR: 38, USD: 42 },
+    status: "Demo stock / opening soon",
     artwork: "vinyl",
-    url: null,
   },
   {
     id: "guitar-notes",
     name: "Guitar Notes Vol. 01",
     category: "Education",
-    note: "Exercises, chord language and creative prompts from Luca’s lessons.",
-    price: null,
+    categorySlug: "education",
+    note: "Exercises, chord language and creative prompts from Luca's lessons.",
+    description:
+      "A prototype printed workbook for players who want Luca's lesson language in a practical format: voicings, rhythm ideas, prompts and short studies.",
+    prices: { GBP: 18, EUR: 22, USD: 24 },
+    status: "Prototype product",
     artwork: "book",
-    url: null,
   },
   {
     id: "artist-shirt",
     name: "LP Artist Shirt",
     category: "Merchandise",
+    categorySlug: "merchandise",
     note: "Heavyweight black cotton with a distressed two-colour print.",
-    price: null,
+    description:
+      "A merch concept using Luca's stripped-back poster language on a heavyweight black shirt with a worn-in stage-ready finish.",
+    prices: { GBP: 26, EUR: 31, USD: 34 },
+    status: "Demo sizing / opening soon",
     artwork: "shirt",
-    url: null,
   },
   {
     id: "remote-session",
     name: "Remote Guitar Session",
     category: "Studio",
+    categorySlug: "studio",
     note: "A custom recorded guitar part shaped around your song.",
-    price: null,
+    description:
+      "A demo booking product for remote guitar parts, arrangement ideas or texture passes recorded for your track and shaped through direct conversation.",
+    prices: { GBP: 95, EUR: 112, USD: 125 },
+    status: "Enquiry-led demo service",
     artwork: "session",
-    url: null,
   },
 ];
 

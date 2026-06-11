@@ -1,0 +1,210 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Luca Pisanu home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "Luca Pisanu" [ref=e5]
+      - navigation "Primary navigation" [ref=e6]:
+        - link "Home" [ref=e7] [cursor=pointer]:
+          - /url: /
+        - link "Music" [ref=e8] [cursor=pointer]:
+          - /url: /music
+        - link "Lessons" [ref=e9] [cursor=pointer]:
+          - /url: /lessons
+        - link "About" [ref=e10] [cursor=pointer]:
+          - /url: /about
+        - link "Videos" [ref=e11] [cursor=pointer]:
+          - /url: /videos
+        - link "Shop" [ref=e12] [cursor=pointer]:
+          - /url: /shop
+        - link "Contact" [ref=e13] [cursor=pointer]:
+          - /url: /contact
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - heading "Singer & Songwriter Composer & Producer Multi-Instrumentalist Independent Artist" [level=1] [ref=e17]:
+          - generic [ref=e18]: Singer & Songwriter
+          - generic [ref=e19]: Composer & Producer
+          - generic [ref=e20]: Multi-Instrumentalist
+          - generic [ref=e21]: Independent Artist
+        - paragraph [ref=e22]: Expressive songs, deep grooves and honest production shaped across guitar, bass and everything around them.
+        - generic [ref=e23]:
+          - link "Listen Now" [ref=e24] [cursor=pointer]:
+            - /url: /music
+            - text: Listen Now
+            - img [ref=e25]
+          - link "Guitar Lessons" [ref=e27] [cursor=pointer]:
+            - /url: /lessons
+          - link "Book Luca" [ref=e28] [cursor=pointer]:
+            - /url: /contact?type=music
+      - img "Luca Pisanu seated with guitar" [ref=e32]
+      - generic [ref=e36]: songs · stories · sound ·
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - heading "Music" [level=2] [ref=e41]
+        - link "View all music" [ref=e42] [cursor=pointer]:
+          - /url: /music
+          - text: View all music
+          - img [ref=e43]
+      - generic [ref=e45]:
+        - article [ref=e46]:
+          - img [ref=e52]
+          - generic [ref=e54]:
+            - generic [ref=e55]: LP / 01
+            - heading "All In Good Time" [level=3] [ref=e56]
+            - paragraph [ref=e57]: A soulful journey through groove, melody and late-night thoughts.
+            - generic [ref=e58]:
+              - generic "Link coming soon" [ref=e59]: Listen
+              - generic [ref=e60]: •
+              - generic "Link coming soon" [ref=e61]: Buy / Support
+        - article [ref=e62]:
+          - img [ref=e69]
+          - generic [ref=e71]:
+            - generic [ref=e72]: LP / 02
+            - heading "Keep Climbing" [level=3] [ref=e73]
+            - paragraph [ref=e74]: An uplifting mix of soul, funk and forward motion.
+            - generic [ref=e75]:
+              - generic "Link coming soon" [ref=e76]: Listen
+              - generic [ref=e77]: •
+              - generic "Link coming soon" [ref=e78]: Buy / Support
+        - article [ref=e79]:
+          - img [ref=e86]
+          - generic [ref=e88]:
+            - generic [ref=e89]: LP / 03
+            - heading "Half Light" [level=3] [ref=e90]
+            - paragraph [ref=e91]: Intimate, raw and made in the in-between.
+            - generic [ref=e92]:
+              - generic "Link coming soon" [ref=e93]: Listen
+              - generic [ref=e94]: •
+              - generic "Link coming soon" [ref=e95]: Buy / Support
+      - generic [ref=e96]:
+        - generic [ref=e97]: New drop
+        - strong [ref=e98]: Live your sound.
+    - generic [ref=e101]:
+      - heading "Live & In The Moment" [level=2] [ref=e102]
+      - iframe [ref=e104]:
+        - generic [active] [ref=f1e1]:
+          - generic "YouTube Video Player" [ref=f1e3]
+          - generic [ref=f1e5]:
+            - generic:
+              - generic:
+                - button "Play video" [ref=f1e10] [cursor=pointer]
+                - button "Hide player controls" [ref=f1e12] [cursor=pointer]
+                - generic [ref=f1e14]:
+                  - generic [ref=f1e19]:
+                    - generic [ref=f1e20]:
+                      - link "Luca Pisanu - No Time For Love (Official Music Video)" [ref=f1e21] [cursor=pointer]:
+                        - /url: https://www.youtube.com/watch?v=WmWasQXIhi0
+                      - link "Luca Pisanu" [ref=f1e22] [cursor=pointer]:
+                        - /url: /channel/UCTVEsJnNrjyLlskBu_ZPoMw
+                        - generic [ref=f1e23]: Luca Pisanu
+                    - generic [ref=f1e24]:
+                      - button [ref=f1e25] [cursor=pointer]
+                      - generic [ref=f1e27]:
+                        - generic: Luca Pisanu
+                        - generic: 340 subscribers
+                  - generic [ref=f1e28]:
+                    - button "Copy link" [ref=f1e31] [cursor=pointer]:
+                      - generic [ref=f1e35]:
+                        - img
+                    - link "Watch on YouTube" [ref=f1e42] [cursor=pointer]:
+                      - /url: https://www.youtube.com/watch?v=WmWasQXIhi0
+                      - generic [ref=f1e45]:
+                        - text: Watch on
+                        - img [ref=f1e47]:
+                          - generic [ref=f1e49]:
+                            - img
+      - link "View all videos" [ref=e105] [cursor=pointer]:
+        - /url: /videos
+        - text: View all videos
+        - img [ref=e106]
+    - generic [ref=e108]:
+      - generic [ref=e110]:
+        - heading "More Than Just Guitar." [level=2] [ref=e111]:
+          - text: More Than
+          - generic [ref=e112]: Just
+          - text: Guitar.
+        - paragraph [ref=e113]: A songwriter, composer and producer with a multi-instrumental approach to melody, rhythm and arrangement.
+        - generic [ref=e114]:
+          - generic [ref=e115]: Songwriter
+          - generic [ref=e116]: Composer
+          - generic [ref=e117]: Producer
+          - generic [ref=e118]: Multi-Instrumentalist
+        - link "Read the story" [ref=e119] [cursor=pointer]:
+          - /url: /about
+          - text: Read the story
+          - img [ref=e120]
+        - generic [ref=e122]:
+          - generic [ref=e123]: Creative work
+          - strong [ref=e124]: Without neat edges.
+      - generic [ref=e127]:
+        - heading "Let's Connect" [level=2] [ref=e128]
+        - paragraph [ref=e129]: For music, lessons, collaborations or a conversation about a new idea.
+        - link "Send a message" [ref=e130] [cursor=pointer]:
+          - /url: /contact
+          - text: Send a message
+          - img [ref=e131]
+    - generic [ref=e137]:
+      - heading "Guitar Lessons" [level=2] [ref=e138]
+      - paragraph [ref=e139]: Learn. Play. Express.
+      - paragraph [ref=e140]: Move beyond shapes and into sound, feel and expression through one-to-one sessions built around your musical voice.
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - generic [ref=e143]: "01"
+          - generic [ref=e144]:
+            - heading "Live Sessions" [level=3] [ref=e145]
+            - paragraph [ref=e146]: One-to-one online or in-person lessons shaped around your goals.
+        - generic [ref=e147]:
+          - generic [ref=e148]: "02"
+          - generic [ref=e149]:
+            - heading "Style & Theory" [level=3] [ref=e150]
+            - paragraph [ref=e151]: Blues, jazz, funk, neo-soul, songwriting and the theory inside the sound.
+        - generic [ref=e152]:
+          - generic [ref=e153]: "03"
+          - generic [ref=e154]:
+            - heading "All Levels Welcome" [level=3] [ref=e155]
+            - paragraph [ref=e156]: From your first chord to advanced improvisation, we build from where you are.
+      - link "Explore lessons" [ref=e157] [cursor=pointer]:
+        - /url: /lessons
+        - text: Explore lessons
+        - img [ref=e158]
+      - generic [ref=e160]:
+        - img [ref=e161]
+        - img "Luca Pisanu smiling" [ref=e162]
+  - contentinfo [ref=e163]:
+    - generic [ref=e164]:
+      - link "Luca Pisanu" [ref=e165] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e166]: Luca
+        - generic [ref=e167]: Pisanu
+      - navigation "Footer navigation" [ref=e168]:
+        - link "Home" [ref=e169] [cursor=pointer]:
+          - /url: /
+        - link "Music" [ref=e170] [cursor=pointer]:
+          - /url: /music
+        - link "Lessons" [ref=e171] [cursor=pointer]:
+          - /url: /lessons
+        - link "About" [ref=e172] [cursor=pointer]:
+          - /url: /about
+        - link "Videos" [ref=e173] [cursor=pointer]:
+          - /url: /videos
+        - link "Shop" [ref=e174] [cursor=pointer]:
+          - /url: /shop
+        - link "Contact" [ref=e175] [cursor=pointer]:
+          - /url: /contact
+      - link "Back to top" [ref=e176] [cursor=pointer]:
+        - /url: "#top"
+        - img [ref=e177]
+    - generic [ref=e179]:
+      - paragraph [ref=e180]: © 2026 Luca Pisanu. Independent artist, musician & educator.
+      - link "lucapisanumusic@gmail.com" [ref=e181] [cursor=pointer]:
+        - /url: mailto:lucapisanumusic@gmail.com
+      - generic "Social links" [ref=e182]:
+        - generic "Link coming soon" [ref=e183]: Instagram
+        - generic "Link coming soon" [ref=e184]: YouTube
+        - generic "Link coming soon" [ref=e185]: Spotify
+        - generic "Link coming soon" [ref=e186]: Apple Music
+        - generic "Link coming soon" [ref=e187]: Facebook
+  - button "Open Next.js Dev Tools" [ref=e193] [cursor=pointer]:
+    - img [ref=e194]
+  - alert [ref=e197]

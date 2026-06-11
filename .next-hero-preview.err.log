@@ -1,0 +1,7 @@
+Error: EPERM: operation not permitted, open 'E:\Websites\Luca 4\.next\dev\server\server-reference-manifest.json.tmp.pnbroa577hc'
+    at ignore-listed frames {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'open',
+  path: 'E:\\Websites\\Luca 4\\.next\\dev\\server\\server-reference-manifest.json.tmp.pnbroa577hc'
+}

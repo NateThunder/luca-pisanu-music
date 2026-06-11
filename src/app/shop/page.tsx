@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/PageHero";
+import Link from "next/link";
+import { AddToCartButton } from "@/components/shop/AddToCartButton";
+import { PriceLabel } from "@/components/shop/PriceLabel";
 import { ProductArtwork } from "@/components/ProductArtwork";
 import { Reveal } from "@/components/Reveal";
-import { ActionLink, Arrow, Barcode } from "@/components/ui";
+import { ActionLink } from "@/components/ui";
 import { products } from "@/data/site";
+import {
+  getProductCategories,
+  getProductHref,
+  getProductSections,
+  normalizeCategory,
+} from "@/lib/shop";
 
 export const metadata: Metadata = {
   title: "Shop",
@@ -11,94 +19,104 @@ export const metadata: Metadata = {
     "Music, printed material, artist merchandise and session work from Luca Pisanu.",
 };
 
-export default function ShopPage() {
+type ShopPageProps = {
+  searchParams?: Promise<{
+    category?: string | string[];
+  }>;
+};
+
+export default async function ShopPage({ searchParams }: ShopPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const requestedCategory = normalizeCategory(resolvedSearchParams.category);
+  const categories = getProductCategories();
+  const activeCategory =
+    categories.find((category) => category.slug === requestedCategory) ?? null;
+  const filteredProducts = activeCategory
+    ? products.filter((product) => product.categorySlug === activeCategory.slug)
+    : products;
+  const productSections = getProductSections(filteredProducts);
+
   return (
     <>
-      <PageHero
-        eyebrow="Physical & practical"
-        title={
-          <>
-            Music You
-            <br />
-            Can <span className="outline-text">Hold.</span>
-          </>
-        }
-        accent="Small runs. Real objects."
-        copy="Limited music, printed ideas, artist goods and studio work made with the same independent spirit."
-        actions={
-          <ActionLink href={products[0].url} variant="primary">
-            Browse the latest <Arrow />
-          </ActionLink>
-        }
-        className="shop-hero"
-        visual={
-          <div className="shop-hero-art">
-            <ProductArtwork product={products[0]} />
-            <span className="shop-hero-ticket">
-              Limited run
-              <Barcode />
-            </span>
-          </div>
-        }
-      />
-
       <Reveal>
-        <section className="shop-catalogue poster-section">
-          <div className="section-heading">
-            <div>
-              <h2>From The Workshop</h2>
-            </div>
-            <span className="handwritten">Made in small numbers.</span>
+        <section className="shop-catalogue poster-section" id="shop-products">
+          <div className="shop-catalogue__header">
+            <h2>Shop</h2>
           </div>
-          <div className="product-grid">
-            {products.map((product, index) => (
-              <article className="product-item" key={product.id}>
-                <ProductArtwork product={product} />
-                <div className="product-item__body">
-                  <span className="micro-label">
-                    0{index + 1} / {product.category}
-                  </span>
-                  <h3>{product.name}</h3>
-                  <p>{product.note}</p>
-                  <div className="product-item__action">
-                    <strong>{product.price ?? "Coming soon"}</strong>
-                    <ActionLink href={product.url} variant="text">
-                      View item
-                    </ActionLink>
-                  </div>
-                </div>
-              </article>
+
+          <nav className="shop-filter" aria-label="Product categories">
+            <Link
+              className={!activeCategory ? "is-active" : ""}
+              href="/shop"
+              aria-current={!activeCategory ? "page" : undefined}
+            >
+              All
+            </Link>
+            {categories.map((category) => (
+              <Link
+                className={activeCategory?.slug === category.slug ? "is-active" : ""}
+                href={`/shop?category=${category.slug}`}
+                key={category.slug}
+                aria-current={
+                  activeCategory?.slug === category.slug ? "page" : undefined
+                }
+              >
+                {category.title}
+              </Link>
             ))}
-          </div>
+          </nav>
+
+          {productSections.map((section) => (
+            <section className="shop-product-section" key={section.slug}>
+              <div className="shop-product-section__heading">
+                <h3>{section.title}</h3>
+                <span>
+                  {section.items.length} item
+                  {section.items.length === 1 ? "" : "s"}
+                </span>
+              </div>
+
+              <div className="shop-product-grid">
+                {section.items.map((product, index) => (
+                  <article className="product-item" key={product.id}>
+                    <Link
+                      className="product-item__art-link"
+                      href={getProductHref(product)}
+                      aria-label={`View ${product.name}`}
+                    >
+                      <ProductArtwork product={product} />
+                    </Link>
+                    <div className="product-item__body">
+                      <span className="micro-label">
+                        0{index + 1} / {product.category}
+                      </span>
+                      <h4>{product.name}</h4>
+                      <p>{product.note}</p>
+                      <div className="product-item__meta">
+                        <PriceLabel
+                          className="product-item__price"
+                          product={product}
+                        />
+                        <span>{product.status}</span>
+                      </div>
+                      <div className="product-item__actions">
+                        <AddToCartButton productId={product.id} compact />
+                        <ActionLink
+                          href={getProductHref(product)}
+                          variant="text"
+                        >
+                          View product
+                        </ActionLink>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
         </section>
       </Reveal>
 
-      <Reveal>
-        <section className="shop-note poster-section">
-          <div>
-            <h2>Independent Means Intentional.</h2>
-          </div>
-          <div>
-            <p className="lead-copy">
-              The shop is designed for limited objects and direct creative
-              work, not endless inventory.
-            </p>
-            <p>
-              Product destinations, pricing, shipping and stock controls are
-              ready to be connected when the real store details are available.
-            </p>
-          </div>
-        </section>
-      </Reveal>
-
-      <section className="page-cta page-cta--mustard poster-section">
-        <span className="handwritten">Looking for something specific?</span>
-        <h2>Ask Luca Directly.</h2>
-        <p>For physical releases, session work or availability.</p>
-        <ActionLink href="/contact?type=music" variant="dark">
-          Shop & music enquiries <Arrow />
-        </ActionLink>
-      </section>
     </>
   );
 }

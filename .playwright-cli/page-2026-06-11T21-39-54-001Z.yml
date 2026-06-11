@@ -1,0 +1,170 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Luca Pisanu home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "Luca Pisanu" [ref=e5]
+      - navigation "Primary navigation" [ref=e6]:
+        - link "Home" [ref=e7] [cursor=pointer]:
+          - /url: /
+        - link "Music" [ref=e8] [cursor=pointer]:
+          - /url: /music
+        - link "Lessons" [ref=e9] [cursor=pointer]:
+          - /url: /lessons
+        - link "About" [ref=e10] [cursor=pointer]:
+          - /url: /about
+        - link "Videos" [ref=e11] [cursor=pointer]:
+          - /url: /videos
+        - link "Shop" [ref=e12] [cursor=pointer]:
+          - /url: /shop
+        - link "Contact" [ref=e13] [cursor=pointer]:
+          - /url: /contact
+      - generic "Social links" [ref=e14]:
+        - generic "Spotify link coming soon" [ref=e15]:
+          - img [ref=e16]
+        - generic "Apple Music link coming soon" [ref=e18]:
+          - img [ref=e19]
+        - generic "YouTube link coming soon" [ref=e21]:
+          - img [ref=e22]
+        - generic "Instagram link coming soon" [ref=e24]:
+          - img [ref=e25]
+  - main [ref=e27]:
+    - generic [ref=e30]:
+      - heading "Luca Pisanu" [level=1] [ref=e31]:
+        - generic [ref=e32]: Luca Pisanu
+      - paragraph [ref=e33]: Expressive songs, deep grooves and honest production shaped across guitar, bass and everything around them.
+      - paragraph [ref=e34]:
+        - generic [ref=e35]: Singer & Songwriter-
+        - generic [ref=e36]: Composer & Producer-
+        - generic [ref=e37]: Multi-Instrumentalist
+      - generic [ref=e38]:
+        - link "Listen Now" [ref=e39] [cursor=pointer]:
+          - /url: /music
+          - text: Listen Now
+          - img [ref=e40]
+        - link "Guitar Lessons" [ref=e42] [cursor=pointer]:
+          - /url: /lessons
+        - link "Book Luca" [ref=e43] [cursor=pointer]:
+          - /url: /contact?type=music
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - heading "Music" [level=2] [ref=e48]
+        - link "View all music" [ref=e49] [cursor=pointer]:
+          - /url: /music
+          - text: View all music
+          - img [ref=e50]
+      - generic [ref=e52]:
+        - article [ref=e53]:
+          - img [ref=e59]
+          - generic [ref=e61]:
+            - generic [ref=e62]: LP / 01
+            - heading "All In Good Time" [level=3] [ref=e63]
+            - paragraph [ref=e64]: A soulful journey through groove, melody and late-night thoughts.
+            - generic [ref=e65]:
+              - generic "Link coming soon" [ref=e66]: Listen
+              - generic [ref=e67]: •
+              - generic "Link coming soon" [ref=e68]: Buy / Support
+        - article [ref=e69]:
+          - img [ref=e76]
+          - generic [ref=e78]:
+            - generic [ref=e79]: LP / 02
+            - heading "Keep Climbing" [level=3] [ref=e80]
+            - paragraph [ref=e81]: An uplifting mix of soul, funk and forward motion.
+            - generic [ref=e82]:
+              - generic "Link coming soon" [ref=e83]: Listen
+              - generic [ref=e84]: •
+              - generic "Link coming soon" [ref=e85]: Buy / Support
+        - article [ref=e86]:
+          - img [ref=e93]
+          - generic [ref=e95]:
+            - generic [ref=e96]: LP / 03
+            - heading "Half Light" [level=3] [ref=e97]
+            - paragraph [ref=e98]: Intimate, raw and made in the in-between.
+            - generic [ref=e99]:
+              - generic "Link coming soon" [ref=e100]: Listen
+              - generic [ref=e101]: •
+              - generic "Link coming soon" [ref=e102]: Buy / Support
+    - generic [ref=e105]:
+      - heading "Watch" [level=2] [ref=e106]
+      - iframe [ref=e108]:
+        - generic [active] [ref=f1e1]:
+          - generic "YouTube Video Player" [ref=f1e3]
+          - generic [ref=f1e5]:
+            - generic:
+              - generic:
+                - button "Play video" [ref=f1e10] [cursor=pointer]
+                - button "Hide player controls" [ref=f1e12] [cursor=pointer]
+                - generic [ref=f1e14]:
+                  - generic [ref=f1e19]:
+                    - generic [ref=f1e20]:
+                      - link "Luca Pisanu - No Time For Love (Official Music Video)" [ref=f1e21] [cursor=pointer]:
+                        - /url: https://www.youtube.com/watch?v=WmWasQXIhi0
+                      - link "Luca Pisanu" [ref=f1e22] [cursor=pointer]:
+                        - /url: /channel/UCTVEsJnNrjyLlskBu_ZPoMw
+                        - generic [ref=f1e23]: Luca Pisanu
+                    - generic [ref=f1e24]:
+                      - button [ref=f1e25] [cursor=pointer]
+                      - generic [ref=f1e27]:
+                        - generic: Luca Pisanu
+                        - generic: 340 subscribers
+                  - generic [ref=f1e28]:
+                    - button "Copy link" [ref=f1e31] [cursor=pointer]:
+                      - generic [ref=f1e35]:
+                        - img
+                    - link "Watch on YouTube" [ref=f1e42] [cursor=pointer]:
+                      - /url: https://www.youtube.com/watch?v=WmWasQXIhi0
+                      - generic [ref=f1e45]:
+                        - text: Watch on
+                        - img [ref=f1e47]:
+                          - generic [ref=f1e49]:
+                            - img
+      - link "View all videos" [ref=e109] [cursor=pointer]:
+        - /url: /videos
+        - text: View all videos
+        - img [ref=e110]
+    - generic [ref=e114]:
+      - generic [ref=e115]:
+        - heading "Let's Connect" [level=2] [ref=e116]
+        - paragraph [ref=e117]: For music, lessons, collaborations or a conversation about a new idea.
+        - link "Send a message" [ref=e118] [cursor=pointer]:
+          - /url: /contact
+          - text: Send a message
+          - img [ref=e119]
+      - img "Luca Pisanu smiling" [ref=e123]
+  - contentinfo [ref=e126]:
+    - generic [ref=e127]:
+      - link "Luca Pisanu" [ref=e128] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e129]: Luca
+        - generic [ref=e130]: Pisanu
+      - navigation "Footer navigation" [ref=e131]:
+        - link "Home" [ref=e132] [cursor=pointer]:
+          - /url: /
+        - link "Music" [ref=e133] [cursor=pointer]:
+          - /url: /music
+        - link "Lessons" [ref=e134] [cursor=pointer]:
+          - /url: /lessons
+        - link "About" [ref=e135] [cursor=pointer]:
+          - /url: /about
+        - link "Videos" [ref=e136] [cursor=pointer]:
+          - /url: /videos
+        - link "Shop" [ref=e137] [cursor=pointer]:
+          - /url: /shop
+        - link "Contact" [ref=e138] [cursor=pointer]:
+          - /url: /contact
+      - link "Back to top" [ref=e139] [cursor=pointer]:
+        - /url: "#top"
+        - img [ref=e140]
+    - generic [ref=e142]:
+      - paragraph [ref=e143]: © 2026 Luca Pisanu. Independent artist, musician & educator.
+      - link "lucapisanumusic@gmail.com" [ref=e144] [cursor=pointer]:
+        - /url: mailto:lucapisanumusic@gmail.com
+      - generic "Social links" [ref=e145]:
+        - generic "Link coming soon" [ref=e146]: Instagram
+        - generic "Link coming soon" [ref=e147]: YouTube
+        - generic "Link coming soon" [ref=e148]: Spotify
+        - generic "Link coming soon" [ref=e149]: Apple Music
+        - generic "Link coming soon" [ref=e150]: Facebook
+  - button "Open Next.js Dev Tools" [ref=e156] [cursor=pointer]:
+    - img [ref=e157]
+  - alert [ref=e160]
