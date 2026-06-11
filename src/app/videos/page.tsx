@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
 import { Reveal } from "@/components/Reveal";
-import { VideoPreview } from "@/components/VideoPreview";
+import { YouTubeVideoBrowser } from "@/components/videos/YouTubeVideoBrowser";
 import { ActionLink, Arrow } from "@/components/ui";
-import { videos } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Videos",
   description:
-    "Live performances, studio moments and lesson previews from Luca Pisanu.",
+    "Live performances, studio moments and Shorts from Luca Pisanu.",
 };
 
 export default function VideosPage() {
@@ -25,10 +24,10 @@ export default function VideosPage() {
           </>
         }
         accent="Press play. Leave the edges in."
-        copy="Performances, studio fragments and teaching moments captured without losing the room around them."
+        copy="Performances, studio fragments and Shorts pulled straight from Luca's YouTube channel."
         actions={
-          <ActionLink href="#featured-video" variant="primary">
-            Watch featured <Arrow />
+          <ActionLink href="#video-browser" variant="primary">
+            Watch latest <Arrow />
           </ActionLink>
         }
         className="videos-hero"
@@ -44,31 +43,7 @@ export default function VideosPage() {
       />
 
       <Reveal>
-        <section className="featured-video poster-section" id="featured-video">
-          <div className="section-heading">
-            <div>
-              <h2>Featured Session</h2>
-            </div>
-            <span className="handwritten">Turn it up.</span>
-          </div>
-          <VideoPreview video={videos[0]} featured />
-        </section>
-      </Reveal>
-
-      <Reveal>
-        <section className="video-gallery poster-section">
-          <div className="section-heading">
-            <div>
-              <h2>More From The Room</h2>
-            </div>
-            <p>Live work, studio process and practical musical ideas.</p>
-          </div>
-          <div className="video-grid">
-            {videos.slice(1).map((video) => (
-              <VideoPreview video={video} key={video.id} />
-            ))}
-          </div>
-        </section>
+        <YouTubeVideoBrowser />
       </Reveal>
 
       <section className="page-cta page-cta--mustard poster-section">

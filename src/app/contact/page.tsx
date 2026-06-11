@@ -46,21 +46,6 @@ export default async function ContactPage({
           <ContactForm initialType={initialType} />
         </section>
       </Reveal>
-
-      <section className="contact-notes poster-section">
-        <div>
-          <h3>Music & Booking</h3>
-          <p>Live work, sessions, sync, releases and production.</p>
-        </div>
-        <div>
-          <h3>Lessons</h3>
-          <p>One-to-one tuition, songwriting and musical development.</p>
-        </div>
-        <div>
-          <h3>Collaboration</h3>
-          <p>Bring the sketch, the half-song or the strange new direction.</p>
-        </div>
-      </section>
     </>
   );
 }

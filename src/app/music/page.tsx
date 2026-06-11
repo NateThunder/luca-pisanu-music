@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/PageHero";
 import { ReleaseArtwork } from "@/components/ReleaseArtwork";
 import { ReleaseList } from "@/components/ReleaseList";
 import { Reveal } from "@/components/Reveal";
-import { ActionLink, Arrow, Barcode } from "@/components/ui";
+import { ActionLink, Arrow } from "@/components/ui";
 import { releases } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -17,31 +16,6 @@ export default function MusicPage() {
 
   return (
     <>
-      <PageHero
-        eyebrow="The recordings"
-        title={
-          <>
-            Songs Made
-            <br />
-            To <span className="outline-text">Move.</span>
-          </>
-        }
-        accent="Soul in the grain."
-        copy="Independent music built from melody, texture and the spaces between the notes."
-        actions={
-          <ActionLink href={featured.listenUrl} variant="primary">
-            Listen to the latest <Arrow />
-          </ActionLink>
-        }
-        className="music-hero"
-        visual={
-          <div className="music-hero-art">
-            <ReleaseArtwork release={featured} showPlay={false} />
-            <span className="music-hero-art__stamp">LP / AUDIO / 01</span>
-          </div>
-        }
-      />
-
       <Reveal>
         <section className="featured-release poster-section">
           <div className="featured-release__art">
@@ -61,11 +35,6 @@ export default function MusicPage() {
               <ActionLink href={featured.supportUrl}>Buy / Support</ActionLink>
             </div>
           </div>
-          <div className="featured-release__ticket" aria-hidden="true">
-            <strong>Independent release</strong>
-            <span>Written · played · produced</span>
-            <Barcode />
-          </div>
         </section>
       </Reveal>
 
@@ -81,19 +50,6 @@ export default function MusicPage() {
         </section>
       </Reveal>
 
-      <Reveal>
-        <section className="page-cta page-cta--paper poster-section">
-          <span className="handwritten">More on the way.</span>
-          <h2>Follow The Next Sound.</h2>
-          <p>
-            Streaming and support destinations will appear here as releases go
-            live.
-          </p>
-          <ActionLink href="/contact?type=music" variant="dark">
-            Music & booking enquiries <Arrow />
-          </ActionLink>
-        </section>
-      </Reveal>
     </>
   );
 }

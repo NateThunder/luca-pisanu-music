@@ -1,0 +1,57 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Luca Pisanu home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "Luca Pisanu" [ref=e5]
+      - button "Menu" [ref=e6]: Menu ＋
+  - main [ref=e7]:
+    - generic [ref=e8]:
+      - figure [ref=e9]:
+        - img "Luca Pisanu seated beside a guitar" [ref=e10]
+      - article [ref=e11]:
+        - text: The artist
+        - heading "About" [level=1] [ref=e12]
+        - blockquote [ref=e13]: “I’m a dot in the middle of nothing, but in my nothing I can achieve everything.”
+        - generic [ref=e14]:
+          - paragraph [ref=e15]: Luca Pisanu is a singer-songwriter, composer, producer and multi-instrumentalist based in Glasgow, UK.
+          - paragraph [ref=e16]: Drawn to music from an early age, he began playing guitar at eight. That first instrument set him on a journey through a wide range of genres and turned a childhood passion into his life’s focus.
+          - paragraph [ref=e17]: Influenced by artists including Stevie Wonder, Stevie Ray Vaughan and Jimi Hendrix, Luca creates eclectic, deeply expressive music rooted in blues, soul, jazz, funk and neo-soul.
+          - paragraph [ref=e18]: After performing with several projects across the UK, Italy and France, Luca began exploring his solo career and developing the groovy, suave sound that has come to define his work.
+          - paragraph [ref=e19]: His wider work has included playing bass for Tom McGuire and the Brassholes, guitar for Charlotte Marshall and the 45s, and working as an in-demand session musician in Glasgow.
+          - paragraph [ref=e20]: Warm vocals, melodic guitars and engaging bass lines make Luca Pisanu an artist to watch.
+  - contentinfo [ref=e21]:
+    - generic [ref=e22]:
+      - link "Luca Pisanu" [ref=e23] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e24]: Luca
+        - generic [ref=e25]: Pisanu
+      - navigation "Footer navigation" [ref=e26]:
+        - link "Home" [ref=e27] [cursor=pointer]:
+          - /url: /
+        - link "Music" [ref=e28] [cursor=pointer]:
+          - /url: /music
+        - link "Lessons" [ref=e29] [cursor=pointer]:
+          - /url: /lessons
+        - link "About" [ref=e30] [cursor=pointer]:
+          - /url: /about
+        - link "Videos" [ref=e31] [cursor=pointer]:
+          - /url: /videos
+        - link "Shop" [ref=e32] [cursor=pointer]:
+          - /url: /shop
+        - link "Contact" [ref=e33] [cursor=pointer]:
+          - /url: /contact
+      - link "Back to top" [ref=e34] [cursor=pointer]:
+        - /url: "#top"
+        - img [ref=e35]
+    - generic [ref=e37]:
+      - paragraph [ref=e38]: © 2026 Luca Pisanu. Independent artist, musician & educator.
+      - link "lucapisanumusic@gmail.com" [ref=e39] [cursor=pointer]:
+        - /url: mailto:lucapisanumusic@gmail.com
+      - generic "Social links" [ref=e40]:
+        - generic "Link coming soon" [ref=e41]: Instagram
+        - generic "Link coming soon" [ref=e42]: YouTube
+        - generic "Link coming soon" [ref=e43]: Spotify
+        - generic "Link coming soon" [ref=e44]: Apple Music
+        - generic "Link coming soon" [ref=e45]: Facebook
+  - alert [ref=e46]
