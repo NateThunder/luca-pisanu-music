@@ -215,11 +215,10 @@ export function YouTubeVideoBrowser() {
   return (
     <section className={`${styles.section} poster-section`} id="video-browser">
       <div className={styles.inner}>
-        <div className="section-heading">
+        <div className="section-heading" aria-hidden="true" style={{ visibility: "hidden" }}>
           <div>
             <h2>Latest Uploads</h2>
           </div>
-          <p>Watch Luca&apos;s newest videos and Shorts directly from YouTube.</p>
         </div>
 
         {status === "loading" ? (

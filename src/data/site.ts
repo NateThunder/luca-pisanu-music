@@ -39,6 +39,15 @@ export type Product = {
   artwork: "vinyl" | "book" | "shirt" | "session";
 };
 
+export type LiveGig = {
+  city: string;
+  date: string;
+  event: string;
+  venue: string;
+  link: string | null;
+  linkLabel: string;
+};
+
 export type CurrencyCode = "GBP" | "EUR" | "USD";
 
 export type InquiryType =
@@ -51,7 +60,7 @@ export type InquiryType =
 export const navigation: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Music", href: "/music" },
-  { label: "Lessons", href: "/lessons" },
+  { label: "Live", href: "/live" },
   { label: "About", href: "/about" },
   { label: "Videos", href: "/videos" },
   { label: "Shop", href: "/shop" },
@@ -102,6 +111,8 @@ export const releases: Release[] = [
     supportUrl: null,
   },
 ];
+
+export const liveGigs: LiveGig[] = [];
 
 export const lessonFeatures = [
   {
