@@ -213,7 +213,7 @@ export function YouTubeVideoBrowser() {
       : "No Shorts found in the latest uploads.";
 
   return (
-    <section className={`${styles.section} poster-section`} id="video-browser">
+    <section className={styles.section} id="video-browser">
       <div className={styles.inner}>
         <div className="section-heading" aria-hidden="true" style={{ visibility: "hidden" }}>
           <div>

@@ -6,6 +6,7 @@ import {
 } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteTextureToggle } from "@/components/SiteTextureToggle";
 import "./globals.css";
 
 const displayFont = Bebas_Neue({
@@ -53,6 +54,7 @@ export default function RootLayout({
       className={`${displayFont.variable} ${bodyFont.variable} ${handwrittenFont.variable}`}
     >
       <body>
+        <SiteTextureToggle />
         <div id="top" />
         <SiteHeader />
         <main>{children}</main>
@@ -61,4 +63,3 @@ export default function RootLayout({
     </html>
   );
 }
-
