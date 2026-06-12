@@ -10,17 +10,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <section className="about-bio poster-section">
-      <figure className="about-bio__portrait">
-        <Image
-          src="/luca-sitting.png"
-          alt="Luca Pisanu seated beside a guitar"
-          fill
-          priority
-          sizes="(max-width: 820px) 100vw, 48vw"
-          className="about-bio__image"
-        />
-      </figure>
-
       <article className="about-bio__content">
         <span className="eyebrow">The artist</span>
         <h1>About</h1>
@@ -60,6 +49,17 @@ export default function AboutPage() {
           </p>
         </div>
       </article>
+
+      <figure className="about-bio__portrait">
+        <Image
+          src="/luca-sitting-cutout.png"
+          alt="Luca Pisanu seated beside a guitar"
+          fill
+          priority
+          sizes="(max-width: 820px) 100vw, 62vw"
+          className="about-bio__image"
+        />
+      </figure>
     </section>
   );
 }

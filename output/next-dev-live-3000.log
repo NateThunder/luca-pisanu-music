@@ -1,0 +1,23 @@
+
+> luca-4@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.2.7 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.53:3000
+✓ Ready in 1259ms
+
+ GET /contact 200 in 1107ms (next.js: 389ms, application-code: 718ms)
+ GET /live 200 in 346ms (next.js: 40ms, application-code: 305ms)
+ GET /live 200 in 244ms (next.js: 12ms, application-code: 231ms)
+ GET /live 200 in 214ms (next.js: 7ms, application-code: 207ms)
+ GET /live 200 in 99ms (next.js: 5ms, application-code: 94ms)
+ GET /live 200 in 105ms (next.js: 5ms, application-code: 100ms)
+ GET /live 200 in 173ms (next.js: 6ms, application-code: 167ms)
+ GET /live 200 in 103ms (next.js: 4ms, application-code: 100ms)
+ GET /shop 200 in 200ms (next.js: 96ms, application-code: 104ms)
+ GET /live 200 in 57ms (next.js: 7ms, application-code: 51ms)
+ GET /about 200 in 118ms (next.js: 61ms, application-code: 57ms)
+ GET /videos 200 in 92ms (next.js: 52ms, application-code: 40ms)
+ GET /api/youtube/videos?maxResults=24 200 in 1232ms (next.js: 138ms, application-code: 1095ms)
+ GET /api/youtube/videos?maxResults=24 200 in 35ms (next.js: 4ms, application-code: 31ms)
