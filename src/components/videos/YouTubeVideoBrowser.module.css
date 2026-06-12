@@ -1,8 +1,12 @@
 .section {
+  isolation: isolate;
+  border-bottom: 1px solid var(--line);
   background:
-    linear-gradient(rgba(10, 11, 10, 0.86), rgba(10, 11, 10, 0.88)),
-    url("/textures/charcoal-grain.png") center / 34rem repeat,
-    url("/textures/folded-black-paper.png") center / 80rem auto repeat;
+    linear-gradient(rgba(10, 11, 10, 0.84), rgba(10, 11, 10, 0.86)),
+    url("/textures/folded-black-paper.png") center top / 78rem auto repeat;
+  overflow: hidden;
+  position: relative;
+  z-index: 81;
   padding: clamp(3.25rem, 6vw, 6.5rem) var(--page-pad);
 }
 

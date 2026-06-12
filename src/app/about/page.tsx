@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About",
@@ -49,17 +48,6 @@ export default function AboutPage() {
           </p>
         </div>
       </article>
-
-      <figure className="about-bio__portrait">
-        <Image
-          src="/luca-sitting-cutout.png"
-          alt="Luca Pisanu seated beside a guitar"
-          fill
-          priority
-          sizes="(max-width: 820px) 100vw, 62vw"
-          className="about-bio__image"
-        />
-      </figure>
     </section>
   );
 }

@@ -63,6 +63,10 @@ body::before {
   z-index: 80;
 }
 
+body.no-site-texture::before {
+  display: none;
+}
+
 ::selection {
   background: var(--mustard);
   color: var(--ink);
@@ -1003,6 +1007,7 @@ p {
   gap: 1rem;
 }
 
+.section-heading h1,
 .section-heading h2 {
   margin: 0;
 }
@@ -1507,8 +1512,7 @@ p {
   background:
     linear-gradient(rgba(17, 18, 16, 0.72), rgba(17, 18, 16, 0.72)),
     url("/textures/folded-black-paper.png") center top / 78rem auto repeat;
-  display: grid;
-  grid-template-columns: minmax(22rem, 0.78fr) minmax(0, 1.22fr);
+  display: block;
   min-height: 100svh;
   padding-top: var(--header-height);
   position: relative;
@@ -1528,32 +1532,13 @@ p {
   z-index: 1;
 }
 
-.about-bio__portrait {
-  align-self: stretch;
-  isolation: isolate;
-  margin: 0;
-  min-height: calc(100svh - var(--header-height));
-  overflow: hidden;
-  position: relative;
-  z-index: 2;
-}
-
-.about-bio__image {
-  filter: grayscale(1) contrast(0.92) brightness(0.94);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 17%, #000 100%);
-  mask-image: linear-gradient(90deg, transparent 0%, #000 17%, #000 100%);
-  mix-blend-mode: screen;
-  object-fit: cover;
-  object-position: center top;
-  opacity: 0.76;
-  transform: scale(1.04) translate(4%, 0);
-  z-index: 1;
-}
-
 .about-bio__content {
-  align-self: center;
   max-width: 40rem;
-  padding: clamp(4rem, 7vw, 7.5rem) 0 clamp(4rem, 7vw, 7.5rem) clamp(1.5rem, 5.5vw, 5.5rem);
+  margin-inline: auto;
+  padding:
+    clamp(4rem, 7vw, 7.5rem)
+    var(--page-pad)
+    clamp(4rem, 7vw, 7.5rem);
   position: relative;
   z-index: 4;
 }
@@ -1738,6 +1723,36 @@ p {
   color: var(--ink);
 }
 
+.page-cta.live-booking-cta {
+  align-items: center;
+  display: grid;
+  gap: 0.3rem clamp(1.5rem, 4vw, 4rem);
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 0;
+  padding: clamp(0.85rem, 1.6vw, 1.25rem) var(--page-pad);
+}
+
+.live-booking-cta .handwritten {
+  font-size: clamp(1.1rem, 1.45vw, 1.55rem);
+}
+
+.live-booking-cta h2 {
+  font-size: clamp(1.9rem, 2.8vw, 3rem);
+  margin: 0;
+}
+
+.live-booking-cta > p {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.live-booking-cta .action-link {
+  align-self: center;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  white-space: nowrap;
+}
+
 .live-hero {
   isolation: isolate;
   min-height: 100svh;
@@ -1807,6 +1822,24 @@ p {
 
 .live-list {
   padding: clamp(3.5rem, 6vw, 6.5rem) var(--page-pad);
+}
+
+.live-list--standalone {
+  padding-top: calc(var(--header-height) + clamp(3rem, 7vh, 5rem));
+}
+
+.live-list--standalone .section-heading h1 {
+  font-size: clamp(3.5rem, 6.5vw, 7.5rem);
+}
+
+.live-list--standalone .section-heading {
+  margin-bottom: 0.85rem;
+}
+
+.live-list__intro {
+  font-size: clamp(1rem, 1.3vw, 1.18rem);
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  max-width: 30rem;
 }
 
 .live-gig-list {
@@ -3603,30 +3636,10 @@ p {
     justify-self: start;
   }
 
-  .about-bio {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    padding-top: var(--header-height);
-  }
-
-  .about-bio__portrait {
-    aspect-ratio: 4 / 3;
-    border: 0;
-    margin-top: -1rem;
-    min-height: 0;
-  }
-
-  .about-bio__image {
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 100%);
-    mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 100%);
-    object-position: center bottom;
-    opacity: 0.64;
-    transform: scale(1.12) translate(3%, 3%);
-  }
-
   .about-bio__content {
     max-width: 42rem;
-    padding: clamp(3.5rem, 10vw, 5rem) var(--page-pad) 1.5rem;
+    padding: clamp(3.5rem, 10vw, 5rem) var(--page-pad)
+      clamp(2.5rem, 8vw, 4rem);
   }
 
   .page-hero__visual {
@@ -3844,6 +3857,10 @@ p {
     padding-block: 3rem;
   }
 
+  .live-list--standalone {
+    padding-top: calc(var(--header-height) + 2rem);
+  }
+
   .live-gig {
     gap: 1rem;
     grid-template-columns: 1fr;
@@ -3866,14 +3883,16 @@ p {
     display: none;
   }
 
-  .about-bio__portrait {
-    aspect-ratio: 1 / 1;
-    margin-top: -0.5rem;
+  .live-booking-cta {
+    grid-template-columns: 1fr;
   }
 
-  .about-bio__image {
-    opacity: 0.58;
-    transform: scale(1.25) translate(10%, 5%);
+  .live-booking-cta .action-link {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: start;
+    margin-top: 0.45rem;
+    white-space: normal;
   }
 
   .about-bio h1 {
