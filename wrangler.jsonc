@@ -1,0 +1,59 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "luca-4",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-07-08",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "luca-4"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "luca-comments",
+      "database_id": "06798dac-8493-4e32-8228-68068a50fe86",
+      "migrations_dir": "migrations"
+    },
+    {
+      "binding": "SHOP_DB",
+      "database_name": "luca-shop",
+      "database_id": "9a70f9a1-a36c-4f83-9bba-091575bd4e03",
+      "migrations_dir": "migrations/shop"
+    },
+    {
+      "binding": "MUSIC_DB",
+      "database_name": "luca-music",
+      "database_id": "2d8cd7a5-b457-4ebd-972d-c70e5a3a7afb",
+      "migrations_dir": "migrations/music"
+    },
+    {
+      "binding": "ABOUT_DB",
+      "database_name": "luca-about",
+      "database_id": "51937456-de67-435e-97aa-39fc25a77d43",
+      "migrations_dir": "migrations/about"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MUSIC_BUCKET",
+      "bucket_name": "luca-music-assets"
+    },
+    {
+      "binding": "SHOP_BUCKET",
+      "bucket_name": "luca-shop-assets"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

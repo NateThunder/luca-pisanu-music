@@ -2,6 +2,16 @@ import type { Release } from "@/data/site";
 import { ReleaseArtwork } from "./ReleaseArtwork";
 import { ActionLink } from "./ui";
 
+const streamingLabels: Array<
+  [keyof NonNullable<Release["streamingLinks"]>, string]
+> = [
+  ["spotify", "Spotify"],
+  ["appleMusic", "Apple Music"],
+  ["youtube", "YouTube"],
+  ["soundcloud", "SoundCloud"],
+  ["bandcamp", "Bandcamp"],
+];
+
 export function ReleaseList({
   items,
   compact = false,
@@ -26,6 +36,16 @@ export function ReleaseList({
               <ActionLink href={release.supportUrl} variant="text">
                 Buy / Support
               </ActionLink>
+              {streamingLabels.map(([key, label]) => {
+                const href = release.streamingLinks?.[key];
+                if (!href) return null;
+
+                return (
+                  <ActionLink href={href} variant="text" key={key}>
+                    {label}
+                  </ActionLink>
+                );
+              })}
             </div>
           </div>
         </article>
@@ -33,4 +53,3 @@ export function ReleaseList({
     </div>
   );
 }
-

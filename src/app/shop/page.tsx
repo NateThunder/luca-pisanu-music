@@ -5,7 +5,7 @@ import { PriceLabel } from "@/components/shop/PriceLabel";
 import { ProductArtwork } from "@/components/ProductArtwork";
 import { Reveal } from "@/components/Reveal";
 import { ActionLink } from "@/components/ui";
-import { products } from "@/data/site";
+import { getShopProducts } from "@/lib/shop-data";
 import {
   getProductCategories,
   getProductHref,
@@ -19,6 +19,8 @@ export const metadata: Metadata = {
     "Music, printed material, artist merchandise and session work from Luca Pisanu.",
 };
 
+export const dynamic = "force-dynamic";
+
 type ShopPageProps = {
   searchParams?: Promise<{
     category?: string | string[];
@@ -27,14 +29,15 @@ type ShopPageProps = {
 
 export default async function ShopPage({ searchParams }: ShopPageProps) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
+  const products = await getShopProducts();
   const requestedCategory = normalizeCategory(resolvedSearchParams.category);
-  const categories = getProductCategories();
+  const categories = getProductCategories(products);
   const activeCategory =
     categories.find((category) => category.slug === requestedCategory) ?? null;
   const filteredProducts = activeCategory
     ? products.filter((product) => product.categorySlug === activeCategory.slug)
     : products;
-  const productSections = getProductSections(filteredProducts);
+  const productSections = getProductSections(filteredProducts, products);
 
   return (
     <>

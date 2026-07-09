@@ -1,12 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
+import { HeroComments } from "@/components/HeroComments";
 import { LessonPortrait } from "@/components/LessonPortrait";
 import { ReleaseList } from "@/components/ReleaseList";
 import { VideoPreview } from "@/components/VideoPreview";
 import { ActionLink, Arrow, Crosshair } from "@/components/ui";
-import { heroLines, heroRoles, releases, videos } from "@/data/site";
+import { heroLines, heroRoles } from "@/data/site";
+import { getMusicReleases } from "@/lib/music-data";
+import { getFeaturedWatchVideo } from "@/lib/watch-data";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [releases, featuredVideo] = await Promise.all([
+    getMusicReleases(),
+    getFeaturedWatchVideo(),
+  ]);
+
   return (
     <>
       <section className="home-hero poster-section">
@@ -24,15 +34,9 @@ export default function HomePage() {
         <div className="home-hero__copy">
           <h1 className="home-headline">
             {heroLines.map((line) => (
-              <span key={line}>
-                {line}
-              </span>
+              <span key={line}>{line}</span>
             ))}
-        </h1>
-          <p className="home-hero__intro">
-            Expressive songs, deep grooves and honest production shaped across
-            guitar, bass and everything around them.
-          </p>
+          </h1>
           <p className="home-hero__roles">
             {heroRoles.map((role) => (
               <span key={role}>{role}</span>
@@ -47,6 +51,7 @@ export default function HomePage() {
           </div>
         </div>
 
+        <HeroComments />
       </section>
 
       <section className="home-music poster-section">
@@ -64,7 +69,7 @@ export default function HomePage() {
       <section className="home-video poster-section">
         <div className="home-video__content">
           <h2>Watch</h2>
-          <VideoPreview video={videos[0]} featured />
+          <VideoPreview video={featuredVideo} featured />
           <ActionLink href="/videos">
             View all videos <Arrow />
           </ActionLink>
