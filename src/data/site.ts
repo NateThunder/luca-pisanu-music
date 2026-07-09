@@ -14,8 +14,18 @@ export type Release = {
   title: string;
   description: string;
   artwork: "portrait" | "tower" | "guitar" | "waves";
+  coverArtUrl?: string | null;
+  coverArtAlt?: string | null;
+  audioUrl?: string | null;
   listenUrl: string | null;
   supportUrl: string | null;
+  streamingLinks?: {
+    spotify?: string | null;
+    appleMusic?: string | null;
+    youtube?: string | null;
+    soundcloud?: string | null;
+    bandcamp?: string | null;
+  };
 };
 
 export type Video = {
@@ -37,6 +47,9 @@ export type Product = {
   prices: Record<CurrencyCode, number>;
   status: string;
   artwork: "vinyl" | "book" | "shirt" | "session";
+  frontArtworkUrl?: string | null;
+  backArtworkUrl?: string | null;
+  artworkAlt?: string | null;
 };
 
 export type LiveGig = {

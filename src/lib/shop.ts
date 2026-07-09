@@ -42,10 +42,10 @@ export function getProductById(productId: string) {
   return products.find((product) => product.id === productId) ?? null;
 }
 
-export function getProductCategories(): ProductCategory[] {
+export function getProductCategories(catalogue = products): ProductCategory[] {
   const categories = new Map<string, string>();
 
-  for (const product of products) {
+  for (const product of catalogue) {
     if (!categories.has(product.categorySlug)) {
       categories.set(product.categorySlug, product.category);
     }
@@ -54,8 +54,11 @@ export function getProductCategories(): ProductCategory[] {
   return Array.from(categories, ([slug, title]) => ({ slug, title }));
 }
 
-export function getProductSections(filteredProducts = products): ProductSection[] {
-  return getProductCategories()
+export function getProductSections(
+  filteredProducts = products,
+  catalogue = products,
+): ProductSection[] {
+  return getProductCategories(catalogue)
     .map((category) => ({
       ...category,
       items: filteredProducts.filter(

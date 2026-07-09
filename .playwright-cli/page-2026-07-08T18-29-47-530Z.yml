@@ -1,0 +1,211 @@
+- generic [active] [ref=f12e1]:
+  - banner [ref=f12e2]:
+    - generic [ref=f12e3]:
+      - link "Luca Pisanu home" [ref=f12e4] [cursor=pointer]:
+        - /url: /
+        - img "Luca Pisanu" [ref=f12e5]
+      - button "Menu" [ref=f12e6]: Menu ＋
+  - main [ref=f12e7]:
+    - generic [ref=f12e8]:
+      - generic [ref=f12e10]:
+        - heading "Luca Pisanu" [level=1] [ref=f12e11]:
+          - generic [ref=f12e12]: Luca Pisanu
+        - paragraph [ref=f12e13]:
+          - generic [ref=f12e14]: Singer & Songwriter-
+          - generic [ref=f12e15]: Composer & Producer-
+          - generic [ref=f12e16]: Multi-Instrumentalist
+        - generic [ref=f12e17]:
+          - link "Listen Now" [ref=f12e18] [cursor=pointer]:
+            - /url: /music
+            - text: Listen Now
+            - img [ref=f12e19]
+          - link "Guitar Lessons" [ref=f12e21] [cursor=pointer]:
+            - /url: /lessons
+          - link "Book Luca" [ref=f12e22] [cursor=pointer]:
+            - /url: /contact?type=music
+      - complementary "Audience comments" [ref=f12e23]:
+        - generic [ref=f12e25]:
+          - article [ref=f12e26]:
+            - generic [ref=f12e27]:
+              - generic [ref=f12e28]: "\""
+              - paragraph [ref=f12e29]: Luca's live shows are something else. Raw, intimate and full of soul. You feel every note.
+              - generic [ref=f12e30]:
+                - strong [ref=f12e31]: Marco T.
+                - generic [ref=f12e32]: 18 minutes ago
+            - generic [ref=f12e33]: MT
+          - article [ref=f12e34]:
+            - generic [ref=f12e35]:
+              - generic [ref=f12e36]: "\""
+              - paragraph [ref=f12e37]: The songwriting, the tone, the vibe... Everything Luca does is on another level. A true artist.
+              - generic [ref=f12e38]:
+                - strong [ref=f12e39]: Giulia R.
+                - generic [ref=f12e40]: 55 minutes ago
+            - generic [ref=f12e41]: GR
+          - article [ref=f12e42]:
+            - generic [ref=f12e43]:
+              - generic [ref=f12e44]: "\""
+              - paragraph [ref=f12e45]: A rare mix of groove and honesty. The songs stay with you long after the room goes quiet.
+              - generic [ref=f12e46]:
+                - strong [ref=f12e47]: Daniel M.
+                - generic [ref=f12e48]: 2 hours ago
+            - generic [ref=f12e49]: DM
+          - article [ref=f12e50]:
+            - generic [ref=f12e51]:
+              - generic [ref=f12e52]: "\""
+              - paragraph [ref=f12e53]: Every performance feels personal. Beautiful playing, warm energy and serious musicianship.
+              - generic [ref=f12e54]:
+                - strong [ref=f12e55]: Sara L.
+                - generic [ref=f12e56]: 5 hours ago
+            - generic [ref=f12e57]: SL
+          - article [ref=f12e58]:
+            - generic [ref=f12e59]:
+              - generic [ref=f12e60]: "\""
+              - paragraph [ref=f12e61]: Luca's live shows are something else. Raw, intimate and full of soul. You feel every note.
+              - generic [ref=f12e62]:
+                - strong [ref=f12e63]: Marco T.
+                - generic [ref=f12e64]: 18 minutes ago
+            - generic [ref=f12e65]: MT
+          - article [ref=f12e66]:
+            - generic [ref=f12e67]:
+              - generic [ref=f12e68]: "\""
+              - paragraph [ref=f12e69]: The songwriting, the tone, the vibe... Everything Luca does is on another level. A true artist.
+              - generic [ref=f12e70]:
+                - strong [ref=f12e71]: Giulia R.
+                - generic [ref=f12e72]: 55 minutes ago
+            - generic [ref=f12e73]: GR
+          - article [ref=f12e74]:
+            - generic [ref=f12e75]:
+              - generic [ref=f12e76]: "\""
+              - paragraph [ref=f12e77]: A rare mix of groove and honesty. The songs stay with you long after the room goes quiet.
+              - generic [ref=f12e78]:
+                - strong [ref=f12e79]: Daniel M.
+                - generic [ref=f12e80]: 2 hours ago
+            - generic [ref=f12e81]: DM
+          - article [ref=f12e82]:
+            - generic [ref=f12e83]:
+              - generic [ref=f12e84]: "\""
+              - paragraph [ref=f12e85]: Every performance feels personal. Beautiful playing, warm energy and serious musicianship.
+              - generic [ref=f12e86]:
+                - strong [ref=f12e87]: Sara L.
+                - generic [ref=f12e88]: 5 hours ago
+            - generic [ref=f12e89]: SL
+        - button "Share Thoughts" [ref=f12e91] [cursor=pointer]
+    - generic [ref=f12e92]:
+      - generic [ref=f12e93]:
+        - heading "Music" [level=2] [ref=f12e95]
+        - link "View all music" [ref=f12e96] [cursor=pointer]:
+          - /url: /music
+          - text: View all music
+          - img [ref=f12e97]
+      - generic [ref=f12e99]:
+        - article [ref=f12e100]:
+          - img [ref=f12e106]
+          - generic [ref=f12e108]:
+            - generic [ref=f12e109]: LP / 01
+            - heading "All In Good Time" [level=3] [ref=f12e110]
+            - paragraph [ref=f12e111]: A soulful journey through groove, melody and late-night thoughts.
+            - generic [ref=f12e112]:
+              - generic "Link coming soon" [ref=f12e113]: Listen
+              - generic [ref=f12e114]: •
+              - generic "Link coming soon" [ref=f12e115]: Buy / Support
+        - article [ref=f12e116]:
+          - img [ref=f12e123]
+          - generic [ref=f12e125]:
+            - generic [ref=f12e126]: LP / 02
+            - heading "Keep Climbing" [level=3] [ref=f12e127]
+            - paragraph [ref=f12e128]: An uplifting mix of soul, funk and forward motion.
+            - generic [ref=f12e129]:
+              - generic "Link coming soon" [ref=f12e130]: Listen
+              - generic [ref=f12e131]: •
+              - generic "Link coming soon" [ref=f12e132]: Buy / Support
+        - article [ref=f12e133]:
+          - img [ref=f12e140]
+          - generic [ref=f12e142]:
+            - generic [ref=f12e143]: LP / 03
+            - heading "Half Light" [level=3] [ref=f12e144]
+            - paragraph [ref=f12e145]: Intimate, raw and made in the in-between.
+            - generic [ref=f12e146]:
+              - generic "Link coming soon" [ref=f12e147]: Listen
+              - generic [ref=f12e148]: •
+              - generic "Link coming soon" [ref=f12e149]: Buy / Support
+    - generic [ref=f12e151]:
+      - heading "Watch" [level=2] [ref=f12e152]
+      - iframe [ref=f12e154]:
+        - generic [active] [ref=f13e1]:
+          - generic "YouTube Video Player" [ref=f13e3]
+          - generic [ref=f13e5]:
+            - generic:
+              - generic:
+                - button "Play video" [ref=f13e10] [cursor=pointer]
+                - button "Hide player controls" [ref=f13e12] [cursor=pointer]
+                - generic [ref=f13e19]:
+                  - generic [ref=f13e20]:
+                    - link "Luca Pisanu - No Time For Love (Official Music Video)" [ref=f13e21] [cursor=pointer]:
+                      - /url: https://www.youtube.com/watch?v=WmWasQXIhi0
+                    - link "Luca Pisanu" [ref=f13e22] [cursor=pointer]:
+                      - /url: /channel/UCTVEsJnNrjyLlskBu_ZPoMw
+                      - generic [ref=f13e23]: Luca Pisanu
+                  - generic [ref=f13e24]:
+                    - button [ref=f13e25] [cursor=pointer]
+                    - generic [ref=f13e27]:
+                      - generic: Luca Pisanu
+                      - generic: 340 subscribers
+      - link "View all videos" [ref=f12e155] [cursor=pointer]:
+        - /url: /videos
+        - text: View all videos
+        - img [ref=f12e156]
+    - generic [ref=f12e160]:
+      - heading "Let's Connect" [level=2] [ref=f12e161]
+      - paragraph [ref=f12e162]: For music, lessons, collaborations or a conversation about a new idea.
+      - link "Send a message" [ref=f12e163] [cursor=pointer]:
+        - /url: /contact
+        - text: Send a message
+        - img [ref=f12e164]
+  - contentinfo [ref=f12e166]:
+    - generic [ref=f12e167]:
+      - generic [ref=f12e168]:
+        - link "Luca Pisanu home" [ref=f12e169] [cursor=pointer]:
+          - /url: /
+          - img "Luca Pisanu" [ref=f12e170]
+        - paragraph [ref=f12e171]: Guitarist. Bassist. Songwriter. Independent artist sharing music directly with the people who matter - you.
+      - navigation "Footer navigation" [ref=f12e172]:
+        - heading "Navigate" [level=2] [ref=f12e173]
+        - generic [ref=f12e174]:
+          - list [ref=f12e175]:
+            - listitem [ref=f12e176]:
+              - link "Home" [ref=f12e177] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=f12e178]:
+              - link "Music" [ref=f12e179] [cursor=pointer]:
+                - /url: /music
+            - listitem [ref=f12e180]:
+              - link "Live" [ref=f12e181] [cursor=pointer]:
+                - /url: /live
+            - listitem [ref=f12e182]:
+              - link "About" [ref=f12e183] [cursor=pointer]:
+                - /url: /about
+          - list [ref=f12e184]:
+            - listitem [ref=f12e185]:
+              - link "Videos" [ref=f12e186] [cursor=pointer]:
+                - /url: /videos
+            - listitem [ref=f12e187]:
+              - link "Shop" [ref=f12e188] [cursor=pointer]:
+                - /url: /shop
+            - listitem [ref=f12e189]:
+              - link "Contact" [ref=f12e190] [cursor=pointer]:
+                - /url: /contact
+      - generic [ref=f12e191]:
+        - heading "Connect" [level=2] [ref=f12e192]
+        - link "Luca Pisanu on Instagram" [ref=f12e193] [cursor=pointer]:
+          - /url: https://www.instagram.com/lpisanu
+          - img [ref=f12e194]
+          - generic [ref=f12e198]: "@lpisanu"
+        - link "Book Luca" [ref=f12e199] [cursor=pointer]:
+          - /url: /contact?type=music
+    - generic [ref=f12e200]:
+      - paragraph [ref=f12e201]: © 2026 Luca Pisanu. All rights reserved.
+      - link "Admin" [ref=f12e202] [cursor=pointer]:
+        - /url: /admin
+  - button "Open Next.js Dev Tools" [ref=f12e208] [cursor=pointer]:
+    - img [ref=f12e209]
+  - alert [ref=f12e212]

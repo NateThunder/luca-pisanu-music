@@ -1,4 +1,14 @@
 import { inquiryTypes, type InquiryType } from "@/data/site";
+import {
+  getRemoteIp,
+  hashIp,
+  text,
+  verifyTurnstile,
+} from "@/lib/comments";
+import {
+  createContactMessageAndSubscriber,
+  getMailingListDatabase,
+} from "@/lib/mailing-list";
 
 type ContactPayload = {
   name?: unknown;
@@ -12,10 +22,6 @@ type ContactPayload = {
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const allowedTypes = new Set(inquiryTypes.map((item) => item.value));
 
-function text(value: unknown) {
-  return typeof value === "string" ? value.trim() : "";
-}
-
 function escapeHtml(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -23,32 +29,6 @@ function escapeHtml(value: string) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
-}
-
-async function verifyTurnstile(token: string, remoteIp: string | null) {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
-
-  if (!secret) {
-    return process.env.NODE_ENV !== "production";
-  }
-
-  const response = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        secret,
-        response: token,
-        remoteip: remoteIp ?? undefined,
-        idempotency_key: crypto.randomUUID(),
-      }),
-    },
-  );
-
-  if (!response.ok) return false;
-  const result = (await response.json()) as { success?: boolean };
-  return result.success === true;
 }
 
 export async function POST(request: Request) {
@@ -98,11 +78,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  const remoteIp =
-    request.headers.get("cf-connecting-ip") ??
-    forwardedFor?.split(",")[0]?.trim() ??
-    null;
+  const remoteIp = getRemoteIp(request);
 
   try {
     const verified = await verifyTurnstile(turnstileToken, remoteIp);
@@ -122,6 +98,37 @@ export async function POST(request: Request) {
         message: "Verification is temporarily unavailable.",
       },
       { status: 503 },
+    );
+  }
+
+  const db = await getMailingListDatabase();
+  if (!db) {
+    return Response.json(
+      {
+        ok: false,
+        message: "Mailing list database is not configured.",
+      },
+      { status: 503 },
+    );
+  }
+
+  try {
+    await createContactMessageAndSubscriber(db, {
+      id: crypto.randomUUID(),
+      name,
+      email,
+      emailNormalized: email.toLowerCase(),
+      inquiryType: type,
+      message,
+      ipHash: await hashIp(remoteIp),
+    });
+  } catch {
+    return Response.json(
+      {
+        ok: false,
+        message: "The message could not be saved. Please try again.",
+      },
+      { status: 502 },
     );
   }
 
@@ -182,4 +189,3 @@ export async function POST(request: Request) {
 
   return Response.json({ ok: true });
 }
-

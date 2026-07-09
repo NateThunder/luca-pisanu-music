@@ -14,7 +14,6 @@ import {
   detectCurrencyFromLocales,
   fallbackCurrency,
   formatPrice,
-  getProductById,
   getProductPrice,
 } from "@/lib/shop";
 
@@ -52,7 +51,14 @@ function normalizeQuantity(quantity: number) {
   return Math.max(1, Math.min(99, Math.floor(quantity)));
 }
 
-function parseStoredCart(value: string | null): StoredCartItem[] {
+function findProduct(products: Product[], productId: string) {
+  return products.find((product) => product.id === productId) ?? null;
+}
+
+function parseStoredCart(
+  value: string | null,
+  products: Product[],
+): StoredCartItem[] {
   if (!value) return [];
 
   try {
@@ -72,7 +78,7 @@ function parseStoredCart(value: string | null): StoredCartItem[] {
           return null;
         }
 
-        if (!getProductById(item.productId)) return null;
+        if (!findProduct(products, item.productId)) return null;
 
         return {
           productId: item.productId,
@@ -85,14 +91,20 @@ function parseStoredCart(value: string | null): StoredCartItem[] {
   }
 }
 
-export function ShopCartProvider({ children }: { children: ReactNode }) {
+export function ShopCartProvider({
+  children,
+  products,
+}: {
+  children: ReactNode;
+  products: Product[];
+}) {
   const [cartItems, setCartItems] = useState<StoredCartItem[]>([]);
   const [currency, setCurrency] = useState<CurrencyCode>(fallbackCurrency);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
-      setCartItems(parseStoredCart(window.localStorage.getItem(STORAGE_KEY)));
+      setCartItems(parseStoredCart(window.localStorage.getItem(STORAGE_KEY), products));
       setCurrency(
         detectCurrencyFromLocales(
           navigator.languages?.length
@@ -104,7 +116,7 @@ export function ShopCartProvider({ children }: { children: ReactNode }) {
     }, 0);
 
     return () => window.clearTimeout(timeout);
-  }, []);
+  }, [products]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -112,7 +124,7 @@ export function ShopCartProvider({ children }: { children: ReactNode }) {
   }, [cartItems, hydrated]);
 
   const addItem = useCallback((productId: string, quantity = 1) => {
-    if (!getProductById(productId)) return;
+    if (!findProduct(products, productId)) return;
 
     setCartItems((currentItems) => {
       const requestedQuantity = normalizeQuantity(quantity);
@@ -133,7 +145,7 @@ export function ShopCartProvider({ children }: { children: ReactNode }) {
           : item,
       );
     });
-  }, []);
+  }, [products]);
 
   const removeItem = useCallback((productId: string) => {
     setCartItems((currentItems) =>
@@ -175,7 +187,7 @@ export function ShopCartProvider({ children }: { children: ReactNode }) {
     () =>
       cartItems
         .map((item) => {
-          const product = getProductById(item.productId);
+          const product = findProduct(products, item.productId);
           if (!product) return null;
 
           const unitAmount = getProductPrice(product, currency);
@@ -187,7 +199,7 @@ export function ShopCartProvider({ children }: { children: ReactNode }) {
           };
         })
         .filter((item): item is CartLineItem => item !== null),
-    [cartItems, currency],
+    [cartItems, currency, products],
   );
 
   const itemCount = useMemo(

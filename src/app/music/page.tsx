@@ -3,7 +3,7 @@ import { ReleaseArtwork } from "@/components/ReleaseArtwork";
 import { ReleaseList } from "@/components/ReleaseList";
 import { Reveal } from "@/components/Reveal";
 import { ActionLink, Arrow } from "@/components/ui";
-import { releases } from "@/data/site";
+import { getMusicReleases } from "@/lib/music-data";
 
 export const metadata: Metadata = {
   title: "Music",
@@ -11,8 +11,13 @@ export const metadata: Metadata = {
     "Explore music by Luca Pisanu: soulful songwriting, expressive guitars and deep grooves.",
 };
 
-export default function MusicPage() {
+export const dynamic = "force-dynamic";
+
+export default async function MusicPage() {
+  const releases = await getMusicReleases();
   const featured = releases[0];
+
+  if (!featured) return null;
 
   return (
     <>
@@ -24,10 +29,7 @@ export default function MusicPage() {
           <div className="featured-release__copy">
             <span className="eyebrow">Featured release</span>
             <h2>{featured.title}</h2>
-            <p>
-              A late-night piece of songwriting with patient guitar, warm
-              harmony and room for every phrase to breathe.
-            </p>
+            <p>{featured.description}</p>
             <div className="hero-actions">
               <ActionLink href={featured.listenUrl} variant="primary">
                 Listen <Arrow />

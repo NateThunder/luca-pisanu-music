@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ActionLink, Arrow } from "@/components/ui";
-import { liveGigs } from "@/data/site";
+import { getLiveGigs } from "@/lib/live-data";
 
 export const metadata: Metadata = {
   title: "Gigs",
@@ -8,7 +8,11 @@ export const metadata: Metadata = {
     "Live gig dates, booking information and performance updates from Luca Pisanu.",
 };
 
-export default function LivePage() {
+export const dynamic = "force-dynamic";
+
+export default async function LivePage() {
+  const liveGigs = await getLiveGigs();
+
   return (
     <>
       <section className="live-list live-list--standalone poster-section">
@@ -24,23 +28,25 @@ export default function LivePage() {
             {liveGigs.map((gig) => (
               <article
                 className="live-gig"
-                key={`${gig.city}-${gig.date}-${gig.venue}`}
+                key={gig.id}
               >
                 <div className="live-gig__date">
-                  <span>{gig.city}</span>
-                  <strong>{gig.date}</strong>
+                  <span>{gig.location}</span>
+                  <strong>{gig.dateLabel}</strong>
                 </div>
                 <div className="live-gig__details">
                   <span>{gig.event}</span>
                   <strong>{gig.venue}</strong>
                 </div>
-                <ActionLink
-                  href={gig.link}
-                  className="live-gig__link"
-                  ariaLabel={`${gig.linkLabel} for ${gig.event} at ${gig.venue}`}
-                >
-                  {gig.linkLabel}
-                </ActionLink>
+                {gig.ticketUrl ? (
+                  <ActionLink
+                    href={gig.ticketUrl}
+                    className="live-gig__link"
+                    ariaLabel={`Tickets for ${gig.event} at ${gig.venue}`}
+                  >
+                    Tickets
+                  </ActionLink>
+                ) : null}
               </article>
             ))}
           </div>
