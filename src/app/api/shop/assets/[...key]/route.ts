@@ -9,8 +9,11 @@ type AssetRouteContext = {
   }>;
 };
 
-export async function GET(_request: Request, context: AssetRouteContext) {
+export async function GET(request: Request, context: AssetRouteContext) {
   const { key } = await context.params;
   const objectKey = decodeURIComponent(key.join("/"));
-  return serveR2Object(await getShopBucket(), objectKey);
+  if (objectKey.startsWith("digital/")) {
+    return new Response("Not found", { status: 404 });
+  }
+  return serveR2Object(await getShopBucket(), objectKey, request);
 }

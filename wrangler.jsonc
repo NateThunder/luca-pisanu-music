@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "luca-4",
+  "name": "luca-pisanu-worker",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-07-08",
   "compatibility_flags": [
@@ -11,10 +11,20 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  "routes": [
+    {
+      "pattern": "lucapisanumusic.com/*",
+      "zone_name": "lucapisanumusic.com"
+    },
+    {
+      "pattern": "www.lucapisanumusic.com/*",
+      "zone_name": "lucapisanumusic.com"
+    }
+  ],
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "luca-4"
+      "service": "luca-pisanu-worker"
     }
   ],
   "d1_databases": [
@@ -55,5 +65,10 @@
   ],
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "APP_ORIGIN": "https://lucapisanumusic.com",
+    "ADMIN_EMAIL": "lucapisanumusic@gmail.com",
+    "PAYPAL_ENVIRONMENT": "live"
   }
 }

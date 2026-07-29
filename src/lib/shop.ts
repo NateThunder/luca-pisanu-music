@@ -100,7 +100,7 @@ export function detectCurrencyFromLocales(locales: readonly string[]) {
 export function formatPrice(amount: number, currency: CurrencyCode) {
   return new Intl.NumberFormat(undefined, {
     currency,
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 2,
     minimumFractionDigits: 0,
     style: "currency",
   }).format(amount);
@@ -108,4 +108,18 @@ export function formatPrice(amount: number, currency: CurrencyCode) {
 
 export function getProductPrice(product: Product, currency: CurrencyCode) {
   return product.prices[currency] ?? product.prices[fallbackCurrency];
+}
+
+export function isProductInStock(product: Product) {
+  if (product.productType === "digital") {
+    if (product.categorySlug !== "_music-release") return product.videoAvailable === true;
+    return product.digitalFormats?.includes("mp3") === true && product.digitalFormats.includes("wav");
+  }
+  if (!product.trackInventory) return true;
+  if (product.variants?.length) {
+    return product.variants.some(
+      (variant) => variant.isAvailable && variant.stockQuantity > 0,
+    );
+  }
+  return (product.stockQuantity ?? 0) > 0;
 }

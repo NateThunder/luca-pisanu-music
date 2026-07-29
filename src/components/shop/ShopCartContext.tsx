@@ -9,21 +9,25 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { CurrencyCode, Product } from "@/data/site";
+import type { CurrencyCode, Product, ProductVariant } from "@/data/site";
 import {
-  detectCurrencyFromLocales,
-  fallbackCurrency,
   formatPrice,
   getProductPrice,
+  isProductInStock,
 } from "@/lib/shop";
 
 type StoredCartItem = {
+  lineId: string;
   productId: string;
+  variantId: string | null;
   quantity: number;
+  chosenAmountMinor: number | null;
 };
 
 export type CartLineItem = {
   product: Product;
+  variant: ProductVariant | null;
+  cartItemId: string;
   quantity: number;
   unitAmount: number;
   lineAmount: number;
@@ -31,13 +35,18 @@ export type CartLineItem = {
 
 type ShopCartContextValue = {
   currency: CurrencyCode;
+  hydrated: boolean;
   itemCount: number;
   lineItems: CartLineItem[];
   subtotalAmount: number;
   subtotalLabel: string;
-  addItem: (productId: string, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (productId: string, quantity?: number, variantId?: string | null) => void;
+  addSupportItem: (productId: string, chosenAmountMinor: number) => void;
+  replaceCartWithItem: (productId: string) => boolean;
+  removeItem: (productId: string, variantId?: string | null) => void;
+  removeCartItem: (cartItemId: string) => void;
+  updateSupportAmount: (cartItemId: string, chosenAmountMinor: number) => void;
+  updateQuantity: (productId: string, quantity: number, variantId?: string | null) => void;
   clearCart: () => void;
   getQuantity: (productId: string) => number;
   getProductPriceLabel: (product: Product) => string;
@@ -53,6 +62,14 @@ function normalizeQuantity(quantity: number) {
 
 function findProduct(products: Product[], productId: string) {
   return products.find((product) => product.id === productId) ?? null;
+}
+
+function itemId(productId: string, variantId: string | null) {
+  return `${productId}:${variantId ?? ""}`;
+}
+
+function newLineId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 function parseStoredCart(
@@ -78,11 +95,34 @@ function parseStoredCart(
           return null;
         }
 
-        if (!findProduct(products, item.productId)) return null;
+        const product = findProduct(products, item.productId);
+        if (
+          !product ||
+          (product.saleMode ?? "purchase") !== "purchase" ||
+          !isProductInStock(product)
+        ) return null;
+        const variantId =
+          "variantId" in item && typeof item.variantId === "string"
+            ? item.variantId
+            : null;
+        if (
+          (product?.variants?.length && !variantId) ||
+          (variantId &&
+            !product?.variants?.some(
+              (variant) => variant.id === variantId && variant.isAvailable,
+            ))
+        ) {
+          return null;
+        }
 
         return {
+          lineId: "lineId" in item && typeof item.lineId === "string" ? item.lineId : newLineId(),
           productId: item.productId,
+          variantId,
           quantity: normalizeQuantity(item.quantity),
+          chosenAmountMinor: "chosenAmountMinor" in item && typeof item.chosenAmountMinor === "number"
+            ? Math.max(0, Math.min(10_000, Math.round(item.chosenAmountMinor)))
+            : null,
         };
       })
       .filter((item): item is StoredCartItem => item !== null);
@@ -94,24 +134,18 @@ function parseStoredCart(
 export function ShopCartProvider({
   children,
   products,
+  currency,
 }: {
   children: ReactNode;
   products: Product[];
+  currency: CurrencyCode;
 }) {
   const [cartItems, setCartItems] = useState<StoredCartItem[]>([]);
-  const [currency, setCurrency] = useState<CurrencyCode>(fallbackCurrency);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       setCartItems(parseStoredCart(window.localStorage.getItem(STORAGE_KEY), products));
-      setCurrency(
-        detectCurrencyFromLocales(
-          navigator.languages?.length
-            ? navigator.languages
-            : [navigator.language],
-        ),
-      );
       setHydrated(true);
     }, 0);
 
@@ -123,21 +157,23 @@ export function ShopCartProvider({
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cartItems));
   }, [cartItems, hydrated]);
 
-  const addItem = useCallback((productId: string, quantity = 1) => {
-    if (!findProduct(products, productId)) return;
+  const addItem = useCallback((productId: string, quantity = 1, variantId: string | null = null) => {
+    const product = findProduct(products, productId);
+    if (!product || (product.saleMode ?? "purchase") !== "purchase") return;
+    if (product.variants?.length && !product.variants.some((variant) => variant.id === variantId && variant.isAvailable)) return;
 
     setCartItems((currentItems) => {
       const requestedQuantity = normalizeQuantity(quantity);
       const existingItem = currentItems.find(
-        (item) => item.productId === productId,
+        (item) => itemId(item.productId, item.variantId) === itemId(productId, variantId),
       );
 
       if (!existingItem) {
-        return [...currentItems, { productId, quantity: requestedQuantity }];
+        return [...currentItems, { lineId: newLineId(), productId, variantId, quantity: requestedQuantity, chosenAmountMinor: null }];
       }
 
       return currentItems.map((item) =>
-        item.productId === productId
+        itemId(item.productId, item.variantId) === itemId(productId, variantId)
           ? {
               ...item,
               quantity: normalizeQuantity(item.quantity + requestedQuantity),
@@ -147,21 +183,40 @@ export function ShopCartProvider({
     });
   }, [products]);
 
-  const removeItem = useCallback((productId: string) => {
+  const addSupportItem = useCallback((productId: string, chosenAmountMinor: number) => {
+    const product = findProduct(products, productId);
+    if (!product || product.productType !== "digital" || product.categorySlug !== "_music-release") return;
+    setCartItems((items) => [...items, {
+      lineId: newLineId(), productId, variantId: null, quantity: 1,
+      chosenAmountMinor: Math.max(0, Math.min(10_000, Math.round(chosenAmountMinor))),
+    }]);
+  }, [products]);
+
+  const removeItem = useCallback((productId: string, variantId: string | null = null) => {
     setCartItems((currentItems) =>
-      currentItems.filter((item) => item.productId !== productId),
+      currentItems.filter((item) => itemId(item.productId, item.variantId) !== itemId(productId, variantId)),
     );
   }, []);
 
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
+  const removeCartItem = useCallback((cartItemId: string) => {
+    setCartItems((items) => items.filter((item) => item.lineId !== cartItemId));
+  }, []);
+
+  const updateSupportAmount = useCallback((cartItemId: string, chosenAmountMinor: number) => {
+    setCartItems((items) => items.map((item) => item.lineId === cartItemId
+      ? { ...item, chosenAmountMinor: Math.max(0, Math.min(10_000, Math.round(chosenAmountMinor))) }
+      : item));
+  }, []);
+
+  const updateQuantity = useCallback((productId: string, quantity: number, variantId: string | null = null) => {
     if (quantity <= 0) {
-      removeItem(productId);
+      removeItem(productId, variantId);
       return;
     }
 
     setCartItems((currentItems) =>
       currentItems.map((item) =>
-        item.productId === productId
+        itemId(item.productId, item.variantId) === itemId(productId, variantId)
           ? { ...item, quantity: normalizeQuantity(quantity) }
           : item,
       ),
@@ -172,9 +227,23 @@ export function ShopCartProvider({
     setCartItems([]);
   }, []);
 
+  const replaceCartWithItem = useCallback((productId: string) => {
+    const product = findProduct(products, productId);
+    if (
+      !product ||
+      (product.saleMode ?? "purchase") !== "purchase" ||
+      !isProductInStock(product) ||
+      product.variants?.length
+    ) return false;
+    setCartItems([{ lineId: newLineId(), productId, variantId: null, quantity: 1, chosenAmountMinor: null }]);
+    return true;
+  }, [products]);
+
   const getQuantity = useCallback(
     (productId: string) =>
-      cartItems.find((item) => item.productId === productId)?.quantity ?? 0,
+      cartItems
+        .filter((item) => item.productId === productId)
+        .reduce((total, item) => total + item.quantity, 0),
     [cartItems],
   );
 
@@ -189,10 +258,17 @@ export function ShopCartProvider({
         .map((item) => {
           const product = findProduct(products, item.productId);
           if (!product) return null;
+          const variant = item.variantId
+            ? product.variants?.find((candidate) => candidate.id === item.variantId) ?? null
+            : null;
 
-          const unitAmount = getProductPrice(product, currency);
+          const unitAmount = item.chosenAmountMinor === null
+            ? getProductPrice(product, currency)
+            : item.chosenAmountMinor / 100;
           return {
             product,
+            variant,
+            cartItemId: item.lineId,
             quantity: item.quantity,
             unitAmount,
             lineAmount: unitAmount * item.quantity,
@@ -215,29 +291,39 @@ export function ShopCartProvider({
   const value = useMemo<ShopCartContextValue>(
     () => ({
       addItem,
+      addSupportItem,
       clearCart,
       currency,
+      hydrated,
       getProductPriceLabel,
       getQuantity,
       itemCount,
       lineItems,
       removeItem,
+      removeCartItem,
+      replaceCartWithItem,
       subtotalAmount,
       subtotalLabel,
       updateQuantity,
+      updateSupportAmount,
     }),
     [
       addItem,
+      addSupportItem,
       clearCart,
       currency,
       getProductPriceLabel,
       getQuantity,
+      hydrated,
       itemCount,
       lineItems,
       removeItem,
+      removeCartItem,
+      replaceCartWithItem,
       subtotalAmount,
       subtotalLabel,
       updateQuantity,
+      updateSupportAmount,
     ],
   );
 

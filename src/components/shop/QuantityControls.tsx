@@ -4,9 +4,11 @@ import { useShopCart } from "./ShopCartContext";
 
 export function QuantityControls({
   productId,
+  variantId = null,
   quantity,
 }: {
   productId: string;
+  variantId?: string | null;
   quantity: number;
 }) {
   const { updateQuantity } = useShopCart();
@@ -15,7 +17,7 @@ export function QuantityControls({
     <div className="shop-quantity" aria-label="Update quantity">
       <button
         type="button"
-        onClick={() => updateQuantity(productId, quantity - 1)}
+        onClick={() => updateQuantity(productId, quantity - 1, variantId)}
         aria-label="Decrease quantity"
       >
         -
@@ -23,7 +25,7 @@ export function QuantityControls({
       <span>{quantity}</span>
       <button
         type="button"
-        onClick={() => updateQuantity(productId, quantity + 1)}
+        onClick={() => updateQuantity(productId, quantity + 1, variantId)}
         aria-label="Increase quantity"
       >
         +

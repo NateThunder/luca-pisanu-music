@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { navigation, socialLinks } from "@/data/site";
 
-const headerSocialLabels = ["Spotify", "Apple Music", "YouTube", "Instagram"];
+const headerSocialLabels = ["Apple Music", "Tidal", "YouTube", "Instagram"];
 
 function SocialIcon({ label }: { label: string }) {
   switch (label) {
@@ -24,6 +24,15 @@ function SocialIcon({ label }: { label: string }) {
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path
             d="M16.47 12.47c-.02-2.18 1.78-3.23 1.86-3.28-1.02-1.49-2.6-1.7-3.16-1.72-1.35-.14-2.63.79-3.31.79-.68 0-1.73-.77-2.85-.75-1.46.02-2.8.85-3.56 2.16-1.52 2.64-.39 6.54 1.1 8.68.72 1.05 1.59 2.24 2.73 2.19 1.09-.04 1.5-.71 2.82-.71 1.31 0 1.68.71 2.83.69 1.17-.02 1.91-1.07 2.63-2.13.83-1.21 1.17-2.39 1.19-2.45-.03-.01-2.26-.87-2.28-3.47ZM14.29 6.05c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.65-1.05 1.69-.91 2.68.96.08 1.94-.49 2.55-1.23Z"
+            fill="currentColor"
+          />
+        </svg>
+      );
+    case "Tidal":
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path
+            d="m4 3 3 3-3 3-3-3 3-3Zm8 0 3 3-3 3-3-3 3-3Zm8 0 3 3-3 3-3-3 3-3Zm-8 8 3 3-3 3-3-3 3-3Z"
             fill="currentColor"
           />
         </svg>
@@ -195,7 +204,7 @@ export function SiteHeader() {
           </button>
         </div>
         <nav aria-label="Mobile navigation">
-          {navigation.map((item, index) => (
+          {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -203,7 +212,6 @@ export function SiteHeader() {
               className={pathname === item.href ? "is-active" : ""}
               onClick={() => setMenuOpen(false)}
             >
-              <span>0{index + 1}</span>
               {item.label}
             </Link>
           ))}

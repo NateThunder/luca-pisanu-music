@@ -13,15 +13,23 @@ export type Release = {
   id: string;
   title: string;
   description: string;
+  releaseType?: "ALBUM" | "EP" | "SINGLE";
+  isAvailable?: boolean;
   artwork: "portrait" | "tower" | "guitar" | "waves";
   coverArtUrl?: string | null;
   coverArtAlt?: string | null;
   audioUrl?: string | null;
   listenUrl: string | null;
   supportUrl: string | null;
+  purchaseProductId?: string | null;
+  purchasePriceGbp?: number | null;
+  purchasePrices?: Record<CurrencyCode, number> | null;
+  isForSale?: boolean;
+  digitalFormats?: Array<"mp3" | "wav">;
   streamingLinks?: {
     spotify?: string | null;
     appleMusic?: string | null;
+    tidal?: string | null;
     youtube?: string | null;
     soundcloud?: string | null;
     bandcamp?: string | null;
@@ -37,6 +45,15 @@ export type Video = {
   thumbnailUrl?: string | null;
 };
 
+export type ProductVariant = {
+  id: string;
+  label: string;
+  sku: string;
+  options: Record<string, string>;
+  stockQuantity: number;
+  isAvailable: boolean;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -50,6 +67,13 @@ export type Product = {
   frontArtworkUrl?: string | null;
   backArtworkUrl?: string | null;
   artworkAlt?: string | null;
+  saleMode?: "purchase" | "enquiry" | "unavailable";
+  trackInventory?: boolean;
+  stockQuantity?: number;
+  variants?: ProductVariant[];
+  productType?: "physical" | "digital";
+  digitalFormats?: Array<"mp3" | "wav">;
+  videoAvailable?: boolean;
 };
 
 export type LiveGig = {
@@ -76,6 +100,7 @@ export const navigation: NavItem[] = [
   { label: "Live", href: "/live" },
   { label: "About", href: "/about" },
   { label: "Videos", href: "/videos" },
+  { label: "EPK", href: "/epk" },
   { label: "Shop", href: "/shop" },
   { label: "Contact", href: "/contact" },
 ];
@@ -224,9 +249,10 @@ export const products: Product[] = [
     categorySlug: "music",
     note: "A numbered physical pressing with artwork insert.",
     description:
-      "A demo pressing concept for Luca's physical releases, built around numbered stock, tactile artwork and a small-run collector feel.",
+      "A small-run physical release built around numbered stock, tactile artwork and a collector feel.",
     prices: { GBP: 32, EUR: 38, USD: 42 },
-    status: "Demo stock / opening soon",
+    status: "Coming soon",
+    saleMode: "unavailable",
     artwork: "vinyl",
   },
   {
@@ -236,9 +262,10 @@ export const products: Product[] = [
     categorySlug: "education",
     note: "Exercises, chord language and creative prompts from Luca's lessons.",
     description:
-      "A prototype printed workbook for players who want Luca's lesson language in a practical format: voicings, rhythm ideas, prompts and short studies.",
+      "A printed workbook for players who want Luca's lesson language in a practical format: voicings, rhythm ideas, prompts and short studies.",
     prices: { GBP: 18, EUR: 22, USD: 24 },
-    status: "Prototype product",
+    status: "Coming soon",
+    saleMode: "unavailable",
     artwork: "book",
   },
   {
@@ -250,8 +277,9 @@ export const products: Product[] = [
     description:
       "A merch concept using Luca's stripped-back poster language on a heavyweight black shirt with a worn-in stage-ready finish.",
     prices: { GBP: 26, EUR: 31, USD: 34 },
-    status: "Demo sizing / opening soon",
+    status: "Coming soon",
     artwork: "shirt",
+    saleMode: "unavailable",
   },
   {
     id: "remote-session",
@@ -260,18 +288,20 @@ export const products: Product[] = [
     categorySlug: "studio",
     note: "A custom recorded guitar part shaped around your song.",
     description:
-      "A demo booking product for remote guitar parts, arrangement ideas or texture passes recorded for your track and shaped through direct conversation.",
+      "Remote guitar parts, arrangement ideas or texture passes recorded for your track and shaped through direct conversation.",
     prices: { GBP: 95, EUR: 112, USD: 125 },
-    status: "Enquiry-led demo service",
+    status: "Enquiries welcome",
     artwork: "session",
+    saleMode: "enquiry",
   },
 ];
 
 export const socialLinks: ExternalDestination[] = [
-  { label: "Instagram", href: null },
-  { label: "YouTube", href: null },
+  { label: "Instagram", href: "https://www.instagram.com/lucapisanumusic/" },
+  { label: "YouTube", href: "https://www.youtube.com/@lucapisanumusic" },
   { label: "Spotify", href: null },
-  { label: "Apple Music", href: null },
+  { label: "Apple Music", href: "https://music.apple.com/gb/artist/luca-pisanu/497386712" },
+  { label: "Tidal", href: "https://tidal.com/artist/19084237" },
   { label: "Facebook", href: null },
 ];
 

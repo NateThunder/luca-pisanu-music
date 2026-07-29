@@ -7,6 +7,12 @@ import {
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteTextureToggle } from "@/components/SiteTextureToggle";
+import { ShopCartProvider } from "@/components/shop/ShopCartContext";
+import { FloatingCartButton } from "@/components/shop/FloatingCartButton";
+import { getShopProducts } from "@/lib/shop-data";
+import { getMusicReleases } from "@/lib/music-data";
+import { currencyForCountry } from "@/lib/shop-orders";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const displayFont = Bebas_Neue({
@@ -28,7 +34,8 @@ const handwrittenFont = Caveat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lucapisanu.com"),
+  metadataBase: new URL("https://lucapisanumusic.com"),
+  manifest: "/favicon/site.webmanifest",
   title: {
     default: "Luca Pisanu | Independent Artist",
     template: "%s | Luca Pisanu",
@@ -43,22 +50,34 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [shopProducts, musicReleases, requestHeaders] = await Promise.all([
+    getShopProducts({ includeMusicReleases: true }), getMusicReleases(), headers(),
+  ]);
+  const releasesByProductId = new Map(musicReleases.filter((release) => release.purchaseProductId).map((release) => [release.purchaseProductId!, release]));
+  const products = shopProducts.map((product) => {
+    const release = releasesByProductId.get(product.id);
+    return release ? { ...product, frontArtworkUrl: release.coverArtUrl, artworkAlt: release.coverArtAlt || release.title } : product;
+  });
+  const currency = currencyForCountry(requestHeaders.get("cf-ipcountry"));
   return (
     <html
       lang="en"
       className={`${displayFont.variable} ${bodyFont.variable} ${handwrittenFont.variable}`}
     >
       <body>
-        <SiteTextureToggle />
-        <div id="top" />
-        <SiteHeader />
-        <main>{children}</main>
-        <SiteFooter />
+        <ShopCartProvider products={products} currency={currency}>
+          <SiteTextureToggle />
+          <div id="top" />
+          <SiteHeader />
+          <main>{children}</main>
+          <SiteFooter />
+          <FloatingCartButton />
+        </ShopCartProvider>
       </body>
     </html>
   );

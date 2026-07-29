@@ -1,30 +1,30 @@
-import Image from "next/image";
 import Link from "next/link";
+import { CroppedImage } from "@/components/CroppedImage";
 import { HeroComments } from "@/components/HeroComments";
-import { LessonPortrait } from "@/components/LessonPortrait";
 import { ReleaseList } from "@/components/ReleaseList";
 import { VideoPreview } from "@/components/VideoPreview";
 import { ActionLink, Arrow, Crosshair } from "@/components/ui";
 import { heroLines, heroRoles } from "@/data/site";
+import { getHomePageMedia } from "@/lib/home-page-data";
 import { getMusicReleases } from "@/lib/music-data";
 import { getFeaturedWatchVideo } from "@/lib/watch-data";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [releases, featuredVideo] = await Promise.all([
+  const [releases, featuredVideo, homeMedia] = await Promise.all([
     getMusicReleases(),
     getFeaturedWatchVideo(),
+    getHomePageMedia(),
   ]);
 
   return (
     <>
       <section className="home-hero poster-section">
         <div className="home-hero__banner" aria-hidden="true">
-          <Image
-            src="/luca-guitar-live.png"
+          <CroppedImage
             alt=""
-            fill
+            picture={homeMedia.banner}
             preload
             sizes="100vw"
             className="home-hero__banner-image"
@@ -63,7 +63,7 @@ export default async function HomePage() {
             View all music <Arrow />
           </Link>
         </div>
-        <ReleaseList items={releases.slice(0, 3)} compact />
+        <ReleaseList items={releases.slice(0, 3)} openPlayerPage />
       </section>
 
       <section className="home-video poster-section">
@@ -88,11 +88,16 @@ export default async function HomePage() {
               Send a message <Arrow />
             </ActionLink>
           </div>
-          <LessonPortrait
-            alt="Luca Pisanu smiling"
-            className="home-contact__portrait"
-            sizes="(max-width: 820px) 82vw, (max-width: 1100px) 38vw, 31vw"
-          />
+          <div className="lesson-portrait home-contact__portrait">
+            <div className="lesson-portrait__photo">
+              <CroppedImage
+                alt="Luca Pisanu smiling"
+                className="lesson-portrait__image"
+                picture={homeMedia.connect}
+                sizes="(max-width: 820px) 82vw, (max-width: 1100px) 38vw, 31vw"
+              />
+            </div>
+          </div>
           <Crosshair className="home-contact__crosshair" />
         </section>
       </div>

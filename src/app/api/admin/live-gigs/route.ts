@@ -14,6 +14,7 @@ import {
 import {
   getLiveGigsDatabase,
   rowToAdminLiveGig,
+  type LineupType,
   type LiveGigRow,
 } from "@/lib/live-data";
 
@@ -26,7 +27,8 @@ type LiveGigBody = {
   location?: unknown;
   startsDate?: unknown;
   startsTime?: unknown;
-  timezone?: unknown;
+  lineupType?: unknown;
+  lineupOther?: unknown;
   ticketUrl?: unknown;
   sortOrder?: unknown;
   isVisible?: unknown;
@@ -45,7 +47,8 @@ const columns = `id,
   location,
   starts_date,
   starts_time,
-  timezone,
+  lineup_type,
+  lineup_other,
   ticket_url,
   sort_order,
   is_visible,
@@ -60,14 +63,14 @@ function isTime(value: string) {
   return /^\d{2}:\d{2}$/.test(value);
 }
 
-function isTimeZone(value: string) {
-  try {
-    new Intl.DateTimeFormat("en-GB", { timeZone: value }).format(new Date());
-    return true;
-  } catch {
-    return false;
-  }
-}
+const lineupTypes = new Set<LineupType>([
+  "SOLO",
+  "DUO",
+  "TRIO",
+  "QUARTET",
+  "FULL_BAND",
+  "OTHER",
+]);
 
 async function fetchLiveGig(db: D1Database, id: string) {
   return await db
@@ -109,7 +112,9 @@ export async function POST(request: Request) {
   const location = text(body.location);
   const startsDate = text(body.startsDate);
   const startsTime = text(body.startsTime);
-  const timezone = text(body.timezone) || "Europe/London";
+  const lineupValue = text(body.lineupType).toUpperCase();
+  const lineupType = lineupValue ? (lineupValue as LineupType) : null;
+  const lineupOther = text(body.lineupOther) || null;
   const id = slugify(text(body.id) || `${event}-${startsDate}`);
   const ticketUrl = nullableUrl(body.ticketUrl, errors, "ticketUrl");
   const sortOrder = numberValue(body.sortOrder, 100);
@@ -121,7 +126,12 @@ export async function POST(request: Request) {
   if (!location) errors.location = "Location is required.";
   if (!isDate(startsDate)) errors.startsDate = "Enter a date in YYYY-MM-DD format.";
   if (!isTime(startsTime)) errors.startsTime = "Enter a time in HH:MM format.";
-  if (!isTimeZone(timezone)) errors.timezone = "Enter a valid timezone.";
+  if (lineupType && !lineupTypes.has(lineupType)) {
+    errors.lineupType = "Choose a valid lineup.";
+  }
+  if (lineupType === "OTHER" && !lineupOther) {
+    errors.lineupOther = "Describe the other lineup.";
+  }
 
   if (Object.keys(errors).length) {
     return jsonError("Check the highlighted fields.", 422, errors);
@@ -139,19 +149,21 @@ export async function POST(request: Request) {
         location,
         starts_date,
         starts_time,
-        timezone,
+        lineup_type,
+        lineup_other,
         ticket_url,
         sort_order,
         is_visible,
         updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
         event = excluded.event,
         venue = excluded.venue,
         location = excluded.location,
         starts_date = excluded.starts_date,
         starts_time = excluded.starts_time,
-        timezone = excluded.timezone,
+        lineup_type = excluded.lineup_type,
+        lineup_other = excluded.lineup_other,
         ticket_url = excluded.ticket_url,
         sort_order = excluded.sort_order,
         is_visible = excluded.is_visible,
@@ -164,7 +176,8 @@ export async function POST(request: Request) {
       location,
       startsDate,
       startsTime,
-      timezone,
+      lineupType,
+      lineupType === "OTHER" ? lineupOther : null,
       ticketUrl,
       sortOrder,
       isVisible ? 1 : 0,

@@ -15,16 +15,23 @@
 
 # next.js
 /.next/
+/.next-stale-*/
 /out/
 /.open-next/
 /.wrangler/
 
 # production
 /build
+/output/
 
 # misc
 .DS_Store
 *.pem
+*.log
+*.pid
+/.codex-*.png
+/.playwright-cli/
+/tmp/
 
 # debug
 npm-debug.log*

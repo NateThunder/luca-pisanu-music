@@ -13,7 +13,7 @@ export function PriceLabel({
   const { currency, getProductPriceLabel } = useShopCart();
 
   return (
-    <span className={className} title={`Demo price shown in ${currency}`}>
+    <span className={className} title={`Price shown in ${currency}`}>
       {getProductPriceLabel(product)}
     </span>
   );

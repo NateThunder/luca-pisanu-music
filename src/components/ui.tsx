@@ -7,6 +7,7 @@ type ActionLinkProps = {
   variant?: "primary" | "outline" | "text" | "dark";
   className?: string;
   ariaLabel?: string;
+  title?: string;
 };
 
 export function ActionLink({
@@ -15,6 +16,7 @@ export function ActionLink({
   variant = "outline",
   className = "",
   ariaLabel,
+  title,
 }: ActionLinkProps) {
   const classes = `action-link action-link--${variant} ${className}`.trim();
 
@@ -23,7 +25,7 @@ export function ActionLink({
       <span
         className={`${classes} is-disabled`}
         aria-disabled="true"
-        title="Link coming soon"
+        title={title ?? "Link coming soon"}
       >
         {children}
       </span>
@@ -38,6 +40,7 @@ export function ActionLink({
         className={classes}
         href={href}
         aria-label={ariaLabel}
+        title={title}
         target={href.startsWith("http") ? "_blank" : undefined}
         rel={href.startsWith("http") ? "noreferrer" : undefined}
       >
@@ -47,7 +50,7 @@ export function ActionLink({
   }
 
   return (
-    <Link className={classes} href={href} aria-label={ariaLabel}>
+    <Link className={classes} href={href} aria-label={ariaLabel} title={title}>
       {children}
     </Link>
   );

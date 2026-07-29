@@ -10,9 +10,12 @@ export function ProductArtwork({
 }) {
   const imageUrl =
     side === "back" ? product.backArtworkUrl : product.frontArtworkUrl;
+  const isAlbumCover = product.categorySlug === "_music-release";
 
   return (
-    <div className={`product-art product-art--${product.artwork}`}>
+    <div
+      className={`product-art product-art--${product.artwork}${isAlbumCover ? " product-art--album" : ""}`}
+    >
       {imageUrl ? (
         <Image
           alt={product.artworkAlt || product.name}
@@ -23,15 +26,15 @@ export function ProductArtwork({
           unoptimized
         />
       ) : null}
-      <span className="product-art__texture" />
       {!imageUrl ? (
         <>
+          <span className="product-art__texture" />
           <span className="product-art__shape product-art__shape--one" />
           <span className="product-art__shape product-art__shape--two" />
           <span className="product-art__shape product-art__shape--three" />
+          <span className="product-art__code">LP / GOODS / {product.id}</span>
         </>
       ) : null}
-      <span className="product-art__code">LP / GOODS / {product.id}</span>
     </div>
   );
 }

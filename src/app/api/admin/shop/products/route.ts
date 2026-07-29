@@ -14,6 +14,10 @@ import {
 } from "@/lib/admin-route-utils";
 import {
   getShopDatabase,
+  getShopDigitalAssets,
+  getShopVideoAssets,
+  getShopShippingRates,
+  getShopVariants,
   rowToAdminShopProduct,
 } from "@/lib/shop-data";
 
@@ -30,6 +34,12 @@ type ShopProductBody = {
   priceEur?: unknown;
   priceUsd?: unknown;
   status?: unknown;
+  saleMode?: unknown;
+  productType?: unknown;
+  videoDeliveryType?: unknown;
+  videoExternalUrl?: unknown;
+  trackInventory?: unknown;
+  stockQuantity?: unknown;
   artwork?: unknown;
   artworkId?: unknown;
   sortOrder?: unknown;
@@ -54,6 +64,12 @@ type ShopProductRow = {
   price_eur: number;
   price_usd: number;
   status: string;
+  sale_mode: "purchase" | "enquiry" | "unavailable";
+  product_type: "physical" | "digital";
+  video_delivery_type: "upload" | "link" | null;
+  video_external_url: string | null;
+  track_inventory: number;
+  stock_quantity: number;
   artwork: Product["artwork"];
   artwork_id: string | null;
   front_key: string | null;
@@ -82,6 +98,12 @@ const columns = `id,
   price_eur,
   price_usd,
   status,
+  sale_mode,
+  product_type,
+  video_delivery_type,
+  video_external_url,
+  track_inventory,
+  stock_quantity,
   artwork,
   artwork_id,
   NULL AS front_key,
@@ -127,6 +149,12 @@ export async function GET(request: Request) {
               shop_products.price_eur,
               shop_products.price_usd,
               shop_products.status,
+              shop_products.sale_mode,
+              shop_products.product_type,
+              shop_products.video_delivery_type,
+              shop_products.video_external_url,
+              shop_products.track_inventory,
+              shop_products.stock_quantity,
               shop_products.artwork,
               shop_products.artwork_id,
               shop_artworks.front_key,
@@ -138,13 +166,26 @@ export async function GET(request: Request) {
               shop_products.updated_at
        FROM shop_products
        LEFT JOIN shop_artworks ON shop_artworks.id = shop_products.artwork_id
+       WHERE shop_products.category_slug <> '_music-release'
        ORDER BY shop_products.sort_order ASC, shop_products.name ASC`,
     )
     .all<ShopProductRow>();
 
-  return jsonOk({
-    products: (result.results ?? []).map(rowToAdminShopProduct),
-  });
+  const [variants, shippingRates, digitalAssets, videoAssets] = await Promise.all([
+    getShopVariants(db, true),
+    getShopShippingRates(db),
+    getShopDigitalAssets(db),
+    getShopVideoAssets(db),
+  ]);
+  const products = (result.results ?? []).map(rowToAdminShopProduct);
+  for (const product of products) {
+    product.variants = variants.filter((variant) => variant.productId === product.id);
+    product.shippingRates = shippingRates.filter((rate) => rate.productId === product.id);
+    product.digitalAssets = digitalAssets.filter((asset) => asset.productId === product.id);
+    product.videoAsset = videoAssets.find((asset) => asset.productId === product.id) ?? null;
+  }
+
+  return jsonOk({ products });
 }
 
 export async function POST(request: Request) {
@@ -164,6 +205,19 @@ export async function POST(request: Request) {
   const note = text(body.note);
   const description = text(body.description);
   const status = text(body.status);
+  const saleModeInput = text(body.saleMode);
+  const saleMode = new Set(["purchase", "enquiry", "unavailable"]).has(
+    saleModeInput,
+  )
+    ? (saleModeInput as "purchase" | "enquiry" | "unavailable")
+    : "purchase";
+  const trackInventory = booleanValue(body.trackInventory, false);
+  const productType = text(body.productType) === "digital" ? "digital" : "physical";
+  const videoDeliveryInput = text(body.videoDeliveryType);
+  const videoDeliveryType = productType === "digital" && new Set(["upload", "link"]).has(videoDeliveryInput)
+    ? (videoDeliveryInput as "upload" | "link") : null;
+  const videoExternalUrl = videoDeliveryType === "link" ? nullableText(body.videoExternalUrl) : null;
+  const stockQuantity = Math.max(0, Math.floor(numberValue(body.stockQuantity, 0)));
   const id = slugify(text(body.id) || name);
   const artworkId = nullableText(body.artworkId);
   const artworkInput = text(body.artwork) || "vinyl";
@@ -189,6 +243,10 @@ export async function POST(request: Request) {
   if (!Number.isFinite(priceGbp) || priceGbp < 0) errors.priceGbp = "Enter a GBP price.";
   if (!Number.isFinite(priceEur) || priceEur < 0) errors.priceEur = "Enter a EUR price.";
   if (!Number.isFinite(priceUsd) || priceUsd < 0) errors.priceUsd = "Enter a USD price.";
+  if (videoDeliveryType === "link") {
+    try { if (!videoExternalUrl || !new URL(videoExternalUrl).protocol.startsWith("http")) throw new Error(); }
+    catch { errors.videoExternalUrl = "Enter a valid HTTPS video or download URL."; }
+  }
 
   if (Object.keys(errors).length) {
     return jsonError("Check the highlighted fields.", 422, errors);
@@ -207,12 +265,18 @@ export async function POST(request: Request) {
         price_eur,
         price_usd,
         status,
+        sale_mode,
+        product_type,
+        video_delivery_type,
+        video_external_url,
+        track_inventory,
+        stock_quantity,
         artwork,
         artwork_id,
         sort_order,
         is_active,
         updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         category = excluded.category,
@@ -223,6 +287,12 @@ export async function POST(request: Request) {
         price_eur = excluded.price_eur,
         price_usd = excluded.price_usd,
         status = excluded.status,
+        sale_mode = excluded.sale_mode,
+        product_type = excluded.product_type,
+        video_delivery_type = excluded.video_delivery_type,
+        video_external_url = excluded.video_external_url,
+        track_inventory = excluded.track_inventory,
+        stock_quantity = excluded.stock_quantity,
         artwork = excluded.artwork,
         artwork_id = excluded.artwork_id,
         sort_order = excluded.sort_order,
@@ -240,6 +310,12 @@ export async function POST(request: Request) {
       Math.round(priceEur),
       Math.round(priceUsd),
       status,
+      saleMode,
+      productType,
+      videoDeliveryType,
+      videoExternalUrl,
+      trackInventory ? 1 : 0,
+      stockQuantity,
       artwork,
       artworkId,
       sortOrder,

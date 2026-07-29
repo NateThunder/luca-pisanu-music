@@ -11,6 +11,7 @@ import {
   getProductHref,
   getProductSections,
   normalizeCategory,
+  isProductInStock,
 } from "@/lib/shop";
 
 export const metadata: Metadata = {
@@ -103,7 +104,13 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                         <span>{product.status}</span>
                       </div>
                       <div className="product-item__actions">
-                        <AddToCartButton productId={product.id} compact />
+                        <AddToCartButton
+                          productId={product.id}
+                          compact
+                          saleMode={product.saleMode}
+                          variants={product.variants}
+                          inStock={isProductInStock(product)}
+                        />
                         <ActionLink
                           href={getProductHref(product)}
                           variant="text"

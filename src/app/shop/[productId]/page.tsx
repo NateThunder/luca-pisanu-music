@@ -8,7 +8,7 @@ import { ProductArtworkViewer } from "@/components/shop/ProductArtworkViewer";
 import { ActionLink, Arrow, Barcode } from "@/components/ui";
 import { products as fallbackProducts } from "@/data/site";
 import { getShopProductById, getShopProducts } from "@/lib/shop-data";
-import { getProductHref } from "@/lib/shop";
+import { getProductHref, isProductInStock } from "@/lib/shop";
 
 type ProductPageProps = {
   params: Promise<{
@@ -88,7 +88,12 @@ export default async function ShopProductPage({ params }: ProductPageProps) {
           </div>
 
           <div className="shop-product-detail__actions">
-            <AddToCartButton productId={product.id} />
+            <AddToCartButton
+              productId={product.id}
+              saleMode={product.saleMode}
+              variants={product.variants}
+              inStock={isProductInStock(product)}
+            />
             <ActionLink href="/shop/cart" variant="primary">
               View cart <Arrow />
             </ActionLink>

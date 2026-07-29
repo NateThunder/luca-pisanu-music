@@ -34,10 +34,14 @@ export function SiteFooter() {
               className="wordmark__image"
             />
           </Link>
-          <p>
-            Guitarist. Bassist. Songwriter. Independent artist sharing music
-            directly with the people who matter - you.
-          </p>
+          <a
+            className="site-footer__credit"
+            href="https://somevilabs.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Website by <strong>Somevi Labs</strong>
+          </a>
         </div>
 
         <nav className="site-footer__nav" aria-label="Footer navigation">
@@ -79,8 +83,9 @@ export function SiteFooter() {
       </div>
 
       <div className="site-footer__secondary">
-        <p>&copy; {new Date().getFullYear()} Luca Pisanu. All rights reserved.</p>
-        <Link href="/admin">Admin</Link>
+        <p>
+          &copy; {new Date().getFullYear()} Luca Pisanu. All rights reserved.
+        </p>
       </div>
     </footer>
   );

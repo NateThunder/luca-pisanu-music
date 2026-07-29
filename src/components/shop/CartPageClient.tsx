@@ -11,7 +11,8 @@ export function CartPageClient() {
     clearCart,
     currency,
     lineItems,
-    removeItem,
+    removeCartItem,
+    updateSupportAmount,
     subtotalLabel,
   } = useShopCart();
 
@@ -22,8 +23,8 @@ export function CartPageClient() {
           <span className="micro-label">Cart / Empty</span>
           <h1>Your Cart Is Quiet.</h1>
           <p>
-            Add a demo product to test the store flow, then come back here to
-            adjust quantities and continue to checkout.
+            Add an available product, then come back here to adjust quantities
+            and continue to checkout.
           </p>
           <Link className="action-link action-link--primary" href="/shop">
             Browse shop
@@ -39,15 +40,15 @@ export function CartPageClient() {
         <span className="micro-label">Cart / {currency}</span>
         <h1>Review The Run.</h1>
         <p>
-          Demo cart state is stored locally in this browser. Prices update from
-          the region-aware display currency.
+          Your cart is stored in this browser. Prices use the currency selected
+          from your location.
         </p>
       </div>
 
       <div className="shop-cart-layout">
         <div className="shop-cart-lines">
           {lineItems.map((item) => (
-            <article className="shop-cart-line" key={item.product.id}>
+            <article className="shop-cart-line" key={item.cartItemId}>
               <Link
                 className="shop-cart-line__art"
                 href={getProductHref(item.product)}
@@ -58,15 +59,23 @@ export function CartPageClient() {
               <div className="shop-cart-line__body">
                 <span className="micro-label">{item.product.category}</span>
                 <h2>{item.product.name}</h2>
+                {item.variant ? <strong>{item.variant.label}</strong> : null}
                 <p>{item.product.note}</p>
                 <div className="shop-cart-line__controls">
-                  <QuantityControls
+                  {item.product.productType === "digital" && item.product.categorySlug === "_music-release" ? <label className="shop-cart-line__support-amount">
+                    Your amount
+                    <input min={item.product.prices[currency]} max="100" step="0.01" type="number" value={item.unitAmount.toFixed(2)} onChange={(event) => {
+                      const amount = Number(event.target.value);
+                      if (Number.isFinite(amount) && amount >= item.product.prices[currency] && amount <= 100) updateSupportAmount(item.cartItemId, Math.round(amount * 100));
+                    }} />
+                  </label> : <QuantityControls
                     productId={item.product.id}
+                    variantId={item.variant?.id}
                     quantity={item.quantity}
-                  />
+                  />}
                   <button
                     type="button"
-                    onClick={() => removeItem(item.product.id)}
+                    onClick={() => removeCartItem(item.cartItemId)}
                   >
                     Remove
                   </button>
@@ -87,8 +96,8 @@ export function CartPageClient() {
             <strong>{subtotalLabel}</strong>
           </div>
           <p>
-            Shipping, tax and real payment handling are intentionally disabled
-            in this prototype.
+            Delivery is calculated from the country entered at checkout. No VAT
+            or tax is added.
           </p>
           <Link className="action-link action-link--primary" href="/shop/checkout">
             Continue to checkout

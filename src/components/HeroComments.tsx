@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { buildSeedComments, type PublicComment } from "@/data/comments";
+import type { PublicComment } from "@/data/comments";
 
 type FormErrors = Partial<
   Record<"screenName" | "email" | "comment" | "turnstile" | "database", string>
@@ -44,7 +44,6 @@ type CommentsResponse = {
 };
 
 const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-const minimumLoopItems = 6;
 const autoScrollPixelsPerMs = 0.035;
 
 function getInitials(name: string) {
@@ -73,16 +72,8 @@ function formatRelativeTime(value: string) {
   return formatter.format(Math.round(diffSeconds / 604800), "week");
 }
 
-function mergeWithSeeds(comments: PublicComment[]) {
-  if (comments.length >= minimumLoopItems) return comments;
-
-  const seeds = buildSeedComments();
-  const needed = Math.max(0, minimumLoopItems - comments.length);
-  return [...comments, ...seeds.slice(0, needed)];
-}
-
 export function HeroComments() {
-  const [comments, setComments] = useState<PublicComment[]>([]);
+  const [comments, setComments] = useState<PublicComment[] | null>(null);
   const [turnstileToken, setTurnstileToken] = useState(
     siteKey ? "" : "development-bypass",
   );
@@ -101,14 +92,14 @@ export function HeroComments() {
   const widgetIdRef = useRef<string | null>(null);
   const pausedRef = useRef(false);
 
-  const visibleComments = useMemo(() => mergeWithSeeds(comments), [comments]);
   const loopComments = useMemo(
     () =>
-      visibleComments.length > 2
-        ? [...visibleComments, ...visibleComments]
-        : visibleComments,
-    [visibleComments],
+      comments && comments.length > 2
+        ? [...comments, ...comments]
+        : comments ?? [],
+    [comments],
   );
+  const hasScrollableComments = (comments?.length ?? 0) > 2;
 
   useEffect(() => {
     let cancelled = false;
@@ -121,7 +112,7 @@ export function HeroComments() {
           setComments(result.comments);
         }
       } catch {
-        // Seed comments keep the hero populated when the live feed is offline.
+        if (!cancelled) setComments([]);
       }
     }
 
@@ -162,7 +153,7 @@ export function HeroComments() {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reducedMotion.matches || visibleComments.length < 3) return;
+    if (reducedMotion.matches || (comments?.length ?? 0) < 3) return;
 
     let animationFrame = 0;
     let lastTime = 0;
@@ -188,7 +179,7 @@ export function HeroComments() {
 
     animationFrame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [visibleComments.length]);
+  }, [comments?.length]);
 
   useEffect(() => {
     if (!state.highlightedId) return;
@@ -279,7 +270,7 @@ export function HeroComments() {
         return;
       }
 
-      setComments((current) => [result.comment as PublicComment, ...current]);
+      setComments((current) => [result.comment as PublicComment, ...(current ?? [])]);
       viewportRef.current?.scrollTo({ top: 0, behavior: "smooth" });
       form.reset();
       resetTurnstile();
@@ -301,7 +292,12 @@ export function HeroComments() {
   }
 
   return (
-    <aside className="hero-comments" aria-label="Audience comments">
+    <aside
+      className={`hero-comments ${
+        hasScrollableComments ? "" : "hero-comments--sparse"
+      }`}
+      aria-label="Audience comments"
+    >
       {siteKey && (
         <Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
@@ -319,6 +315,13 @@ export function HeroComments() {
         onBlurCapture={() => setPaused(false)}
       >
         <div className="hero-comments__track">
+          {comments?.length === 0 ? (
+            <article className="comment-card comment-card--empty">
+              <div className="comment-card__body">
+                <p>No comments yet. Share the first thought.</p>
+              </div>
+            </article>
+          ) : null}
           {loopComments.map((comment, index) => (
             <article
               className={`comment-card ${

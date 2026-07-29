@@ -1,11 +1,13 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { releases as fallbackReleases, type Release } from "@/data/site";
 import { imageAssetUrl } from "./file-assets";
+import { getShopDatabase, type AdminDigitalAsset } from "./shop-data";
 
 export type MusicReleaseRow = {
   id: string;
   title: string;
   description: string;
+  release_type: "ALBUM" | "EP" | "SINGLE";
   artwork: Release["artwork"];
   artwork_id: string | null;
   selected_artwork_key: string | null;
@@ -16,6 +18,7 @@ export type MusicReleaseRow = {
   support_url: string | null;
   spotify_url: string | null;
   apple_music_url: string | null;
+  tidal_url: string | null;
   youtube_url: string | null;
   soundcloud_url: string | null;
   bandcamp_url: string | null;
@@ -29,6 +32,7 @@ export type AdminMusicRelease = {
   id: string;
   title: string;
   description: string;
+  releaseType: "ALBUM" | "EP" | "SINGLE";
   artwork: Release["artwork"];
   artworkId: string | null;
   coverArtKey: string | null;
@@ -37,8 +41,15 @@ export type AdminMusicRelease = {
   audioUrl: string | null;
   listenUrl: string | null;
   supportUrl: string | null;
+  purchaseProductId: string;
+  purchasePriceGbp: number;
+  purchasePriceEur: number;
+  purchasePriceUsd: number;
+  isForSale: boolean;
+  digitalAssets: AdminDigitalAsset[];
   spotifyUrl: string | null;
   appleMusicUrl: string | null;
+  tidalUrl: string | null;
   youtubeUrl: string | null;
   soundcloudUrl: string | null;
   bandcampUrl: string | null;
@@ -47,6 +58,86 @@ export type AdminMusicRelease = {
   createdAt: string;
   updatedAt: string;
 };
+
+export const musicPurchaseProductId = (releaseId: string) =>
+  `music-release-${releaseId}`;
+
+type MusicPurchaseRow = {
+  id: string;
+  price_gbp: number;
+  price_eur: number;
+  price_usd: number;
+  sale_mode: "purchase" | "enquiry" | "unavailable";
+  is_active: number;
+};
+
+export type MusicPurchase = {
+  productId: string;
+  purchasePriceGbp: number;
+  purchasePriceEur: number;
+  purchasePriceUsd: number;
+  purchasePrices: Record<"GBP" | "EUR" | "USD", number>;
+  isForSale: boolean;
+  digitalAssets: AdminDigitalAsset[];
+};
+
+export async function getMusicPurchases(releaseIds: string[]) {
+  const purchases = new Map<string, MusicPurchase>();
+  if (!releaseIds.length) return purchases;
+  const db = await getShopDatabase();
+  if (!db) return purchases;
+
+  const productIds = releaseIds.map(musicPurchaseProductId);
+  const placeholders = productIds.map(() => "?").join(", ");
+  try {
+    const [products, assets] = await Promise.all([
+      db.prepare(
+        `SELECT id, price_gbp, price_eur, price_usd, sale_mode, is_active
+         FROM shop_products WHERE id IN (${placeholders})`,
+      ).bind(...productIds).all<MusicPurchaseRow>(),
+      db.prepare(
+        `SELECT id, product_id, format, r2_key, original_filename, content_type,
+                size_bytes, created_at, updated_at
+         FROM shop_product_digital_assets WHERE product_id IN (${placeholders})
+         ORDER BY product_id, format`,
+      ).bind(...productIds).all<import("./shop-data").DigitalAssetRow>(),
+    ]);
+    const assetsByProduct = new Map<string, AdminDigitalAsset[]>();
+    for (const row of assets.results ?? []) {
+      const current = assetsByProduct.get(row.product_id) ?? [];
+      current.push({
+        id: row.id,
+        productId: row.product_id,
+        format: row.format,
+        originalFilename: row.original_filename,
+        contentType: row.content_type,
+        sizeBytes: row.size_bytes,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+      });
+      assetsByProduct.set(row.product_id, current);
+    }
+    for (const row of products.results ?? []) {
+      const releaseId = row.id.replace(/^music-release-/, "");
+      const digitalAssets = assetsByProduct.get(row.id) ?? [];
+      const hasBothFormats = ["mp3", "wav"].every((format) =>
+        digitalAssets.some((asset) => asset.format === format),
+      );
+      purchases.set(releaseId, {
+        productId: row.id,
+        purchasePriceGbp: row.price_gbp,
+        purchasePriceEur: row.price_eur,
+        purchasePriceUsd: row.price_usd,
+        purchasePrices: { GBP: row.price_gbp, EUR: row.price_eur, USD: row.price_usd },
+        isForSale: row.is_active === 1 && row.sale_mode === "purchase" && hasBothFormats,
+        digitalAssets,
+      });
+    }
+  } catch {
+    // Music remains available when commerce storage has not been migrated yet.
+  }
+  return purchases;
+}
 
 export type MusicArtworkRow = {
   id: string;
@@ -99,6 +190,8 @@ function rowToRelease(row: MusicReleaseRow): Release {
     id: row.id,
     title: row.title,
     description: row.description,
+    releaseType: row.release_type,
+    isAvailable: row.is_published === 1,
     artwork: row.artwork,
     coverArtUrl,
     coverArtAlt: row.selected_artwork_alt,
@@ -108,6 +201,7 @@ function rowToRelease(row: MusicReleaseRow): Release {
     streamingLinks: {
       spotify: row.spotify_url,
       appleMusic: row.apple_music_url,
+      tidal: row.tidal_url,
       youtube: row.youtube_url,
       soundcloud: row.soundcloud_url,
       bandcamp: row.bandcamp_url,
@@ -120,6 +214,7 @@ export function rowToAdminMusicRelease(row: MusicReleaseRow): AdminMusicRelease 
     id: row.id,
     title: row.title,
     description: row.description,
+    releaseType: row.release_type,
     artwork: row.artwork,
     artworkId: row.artwork_id,
     coverArtKey: row.cover_art_key,
@@ -128,8 +223,15 @@ export function rowToAdminMusicRelease(row: MusicReleaseRow): AdminMusicRelease 
     audioUrl: assetUrl(row.audio_key),
     listenUrl: row.listen_url,
     supportUrl: row.support_url,
+    purchaseProductId: musicPurchaseProductId(row.id),
+    purchasePriceGbp: 1.99,
+    purchasePriceEur: 1.99,
+    purchasePriceUsd: 1.99,
+    isForSale: false,
+    digitalAssets: [],
     spotifyUrl: row.spotify_url,
     appleMusicUrl: row.apple_music_url,
+    tidalUrl: row.tidal_url,
     youtubeUrl: row.youtube_url,
     soundcloudUrl: row.soundcloud_url,
     bandcampUrl: row.bandcamp_url,
@@ -163,6 +265,7 @@ export async function getMusicReleases() {
         `SELECT music_releases.id,
                 music_releases.title,
                 music_releases.description,
+                music_releases.release_type,
                 music_releases.artwork,
                 music_releases.artwork_id,
                 music_artworks.image_key AS selected_artwork_key,
@@ -173,6 +276,7 @@ export async function getMusicReleases() {
                 music_releases.support_url,
                 music_releases.spotify_url,
                 music_releases.apple_music_url,
+                music_releases.tidal_url,
                 music_releases.youtube_url,
                 music_releases.soundcloud_url,
                 music_releases.bandcamp_url,
@@ -182,12 +286,24 @@ export async function getMusicReleases() {
                 music_releases.updated_at
          FROM music_releases
          LEFT JOIN music_artworks ON music_artworks.id = music_releases.artwork_id
-         WHERE music_releases.is_published = 1
          ORDER BY music_releases.sort_order ASC, music_releases.title ASC`,
       )
       .all<MusicReleaseRow>();
 
-    const dbReleases = (result.results ?? []).map(rowToRelease);
+    const rows = result.results ?? [];
+    const purchases = await getMusicPurchases(rows.map((row) => row.id));
+    const dbReleases = rows.map((row) => {
+      const release = rowToRelease(row);
+      const purchase = purchases.get(row.id);
+      if (purchase) {
+        release.purchaseProductId = purchase.productId;
+        release.purchasePriceGbp = purchase.purchasePriceGbp;
+        release.purchasePrices = purchase.purchasePrices;
+        release.isForSale = purchase.isForSale;
+        release.digitalFormats = purchase.digitalAssets.map((asset) => asset.format);
+      }
+      return release;
+    });
     return dbReleases.length > 0 ? dbReleases : fallbackReleases;
   } catch {
     return fallbackReleases;

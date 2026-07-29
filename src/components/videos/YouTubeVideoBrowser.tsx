@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import type { YouTubeVideoItem, YouTubeVideosResponse } from "@/lib/youtube";
 import { PlayIcon } from "@/components/ui";
 import styles from "./YouTubeVideoBrowser.module.css";
@@ -312,48 +313,57 @@ export function YouTubeVideoBrowser() {
         ) : null}
       </div>
 
-      {selectedVideo ? (
-        <div
-          className={styles.modal}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={`video-modal-title-${selectedVideo.id}`}
-        >
-          <button
-            type="button"
-            onClick={() => setSelectedVideo(null)}
-            aria-label="Close video player"
-            className={styles.modalBackdrop}
-          />
-          <div className={styles.modalPanel}>
-            <div className={styles.modalHeader}>
-              <h2 id={`video-modal-title-${selectedVideo.id}`}>{selectedVideo.title}</h2>
+      {selectedVideo
+        ? createPortal(
+            <div
+              className={styles.modal}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`video-modal-title-${selectedVideo.id}`}
+            >
               <button
                 type="button"
                 onClick={() => setSelectedVideo(null)}
-                className={styles.closeButton}
-              >
-                Close
-              </button>
-            </div>
-            <div className={styles.player}>
-              <iframe
-                src={getEmbedUrl(selectedVideo)}
-                title={selectedVideo.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
+                aria-label="Close video player"
+                className={styles.modalBackdrop}
               />
-            </div>
-            <div className={styles.modalFooter}>
-              <p>{formatDate(selectedVideo.publishedAt)}</p>
-              <a href={selectedVideo.videoUrl} target="_blank" rel="noreferrer">
-                Watch on YouTube
-              </a>
-            </div>
-          </div>
-        </div>
-      ) : null}
+              <div
+                className={`${styles.modalPanel} ${
+                  selectedVideo.format === "short" ? styles.shortModalPanel : ""
+                }`}
+              >
+                <div className={styles.modalHeader}>
+                  <h2 id={`video-modal-title-${selectedVideo.id}`}>{selectedVideo.title}</h2>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedVideo(null)}
+                    className={styles.closeButton}
+                  >
+                    Close
+                  </button>
+                </div>
+                <div className={styles.playerStage}>
+                  <div className={styles.player}>
+                    <iframe
+                      src={getEmbedUrl(selectedVideo)}
+                      title={selectedVideo.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+                <div className={styles.modalFooter}>
+                  <p>{formatDate(selectedVideo.publishedAt)}</p>
+                  <a href={selectedVideo.videoUrl} target="_blank" rel="noreferrer">
+                    Watch on YouTube
+                  </a>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </section>
   );
 }
